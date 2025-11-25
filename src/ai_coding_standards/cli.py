@@ -26,7 +26,7 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     """Get path to a file in the package data.
     
     Args:
-        file_path: Relative path to file from package root
+        file_path: Relative path to file from package root (e.g., ".editorconfig")
     
     Returns:
         Path to file if found, None otherwise
@@ -39,34 +39,33 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     
     # Then try package data directory (when installed)
     try:
-        # Try package data directory
         if hasattr(pkg_resources, "files"):
+            pkg = pkg_resources.files("ai_coding_standards")
+            # Try in data/ subdirectory first (installed package)
+            data_path = pkg / "data" / file_path
             try:
-                pkg = pkg_resources.files("ai_coding_standards")
-                # Try in data/ subdirectory
-                data_path = pkg / "data" / file_path
                 if data_path.is_file():
-                    return Path(str(data_path))
-                # Also try direct
-                direct_path = pkg / file_path
-                if direct_path.is_file():
-                    return Path(str(direct_path))
+                    # For installed packages, we need to extract or use the path directly
+                    # Try to get the actual file path
+                    import os
+                    # Use as_path() if available (Python 3.9+)
+                    if hasattr(data_path, "as_path"):
+                        return data_path.as_path()
+                    # Otherwise, construct path from the package location
+                    import site
+                    for site_packages in site.getsitepackages():
+                        pkg_dir = Path(site_packages) / "ai_coding_standards" / "data" / file_path
+                        if pkg_dir.exists():
+                            return pkg_dir
             except Exception:
                 pass
-        
-        # Fallback: try path() API with data/
-        try:
-            with pkg_resources.path("ai_coding_standards.data", file_path) as p:
-                return Path(p)
-        except Exception:
-            pass
-        
-        # Try direct path
-        try:
-            with pkg_resources.path("ai_coding_standards", file_path) as p:
-                return Path(p)
-        except Exception:
-            pass
+    except Exception:
+        pass
+    
+    # Fallback: try path() API
+    try:
+        with pkg_resources.path("ai_coding_standards.data", file_path) as p:
+            return Path(p)
     except Exception:
         pass
     

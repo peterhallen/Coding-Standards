@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Comprehensive coding standards and best practices for Python development with AI assistants"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "AI Coding Standards Team"}
 ]
@@ -16,7 +16,6 @@ keywords = ["coding-standards", "python", "ai", "code-quality", "linting", "form
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -50,6 +49,7 @@ Repository = "https://github.com/peterhallen/AI-coding-standards"
 Issues = "https://github.com/peterhallen/AI-coding-standards/issues"
 
 [tool.setuptools]
+package-dir = {"" = "src"}
 packages = ["ai_coding_standards"]
 include-package-data = true
 

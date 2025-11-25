@@ -8,11 +8,15 @@ max-doc-length = 100
 # Complexity threshold
 max-complexity = 10
 
+# Select specific error codes to check
+select = E,W,F,C90
+
 # Ignore specific error codes
 # E501: line too long (handled by max-line-length)
 # W503: line break before binary operator (conflicts with Black)
 # E203: whitespace before ':' (conflicts with Black)
-ignore = E501, W503, E203
+# C901: too complex (handled by max-complexity)
+ignore = E501, W503, E203, C901
 
 # Exclude directories and files
 exclude =
@@ -35,23 +39,6 @@ per-file-ignores =
     __init__.py:F401
     tests/*:E501
 
-# Maximum number of characters per line (soft limit)
-# Hard limit is 120, but we prefer 100
-max-line-length = 100
-
 # Import order checking (use isort instead, but flake8 can help)
 import-order-style = google
-
-# Maximum complexity
-max-complexity = 10
-
-# Select specific error codes to check
-select = E,W,F,C90
-
-# Exclude specific error codes
-exclude =
-    E203,  # whitespace before ':' (conflicts with Black)
-    E501,  # line too long (handled by max-line-length)
-    W503,  # line break before binary operator (conflicts with Black)
-    C901,  # too complex (handled by max-complexity)
 

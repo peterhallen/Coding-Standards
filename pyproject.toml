@@ -107,7 +107,8 @@ omit = [
     "*/venv/*",
     "*/.venv/*",
     "*/setup.py",
-    "*/conftest.py"
+    "*/conftest.py",
+    "*/bad_example.py"  # Educational file, intentionally not tested
 ]
 
 [tool.coverage.report]

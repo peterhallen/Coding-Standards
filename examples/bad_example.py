@@ -9,9 +9,13 @@ to help developers understand what to avoid.
 """
 
 # Bad: No organization, mixed imports
-import json, os, sys
+import json
+import os
+import sys
 from datetime import datetime
+
 import boto3
+
 
 # Bad: No constants, magic numbers everywhere
 def calc(x, y, z):
@@ -31,9 +35,9 @@ def proc(data):
             result = []
             for item in data:
                 if item:
-                    if 'id' in item:
-                        if item['id']:
-                            if isinstance(item['id'], str):
+                    if "id" in item:
+                        if item["id"]:
+                            if isinstance(item["id"], str):
                                 result.append(item)
             if result:
                 if len(result) > 0:
@@ -53,7 +57,9 @@ def check(u, t):
 
 
 # Bad: No docstring, no type hints, too many parameters
-def process(account_id, region, include_cost, timeout, retry_count, output_format, verbose, dry_run):
+def process(
+    account_id, region, include_cost, timeout, retry_count, output_format, verbose, dry_run
+):
     # Bad: 8 parameters (max should be 5, prefer 3)
     # Bad: No validation
     # Bad: No error handling
@@ -64,7 +70,7 @@ def process(account_id, region, include_cost, timeout, retry_count, output_forma
 def fetch_data(account_id):
     try:
         # Bad: No validation of input
-        client = boto3.client('sts')
+        client = boto3.client("sts")
         response = client.get_caller_identity()
         return response
     except:  # Bad: Bare except, suppresses all errors
@@ -121,4 +127,3 @@ def get_value(key, data):
     if isinstance(data[key], dict):
         return {}
     return data[key]
-

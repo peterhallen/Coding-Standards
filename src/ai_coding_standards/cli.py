@@ -31,24 +31,49 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     Returns:
         Path to file if found, None otherwise
     """
-    # First try development mode (files in repo root)
+    # First, try to determine if we're in an installed package or development mode
+    is_installed = False
+    installed_pkg_dir = None
+    
+    try:
+        import importlib.util
+        spec = importlib.util.find_spec("ai_coding_standards")
+        if spec and spec.origin:
+            installed_pkg_dir = Path(spec.origin).parent
+            # Check if this is an installed package (not in our dev repo)
+            if "site-packages" in str(installed_pkg_dir) or "dist-packages" in str(installed_pkg_dir):
+                is_installed = True
+            # Also check if the data directory exists (indicates installed package structure)
+            if (installed_pkg_dir / "data").exists():
+                is_installed = True
+    except Exception:
+        pass
+    
+    # If installed, prioritize installed package location
+    if is_installed and installed_pkg_dir:
+        data_path = installed_pkg_dir / "data" / file_path
+        if data_path.exists():
+            return data_path
+        # Also try pkg_resources methods for installed packages
+        try:
+            import pkg_resources as old_pkg_resources
+            resource_path = old_pkg_resources.resource_filename("ai_coding_standards", f"data/{file_path}")
+            if Path(resource_path).exists():
+                return Path(resource_path)
+        except Exception:
+            pass
+    
+    # Then try development mode (files in repo root)
     for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
         potential_path = base_path / file_path
         if potential_path.exists():
             return potential_path
     
-    # Then try package data directory (when installed)
-    # Method 1: Use importlib.util to find package location
-    try:
-        import importlib.util
-        spec = importlib.util.find_spec("ai_coding_standards")
-        if spec and spec.origin:
-            pkg_dir = Path(spec.origin).parent
-            data_path = pkg_dir / "data" / file_path
-            if data_path.exists():
-                return data_path
-    except Exception:
-        pass
+    # Fallback: try package data directory even if not detected as installed
+    if installed_pkg_dir:
+        data_path = installed_pkg_dir / "data" / file_path
+        if data_path.exists():
+            return data_path
     
     # Method 2: Use importlib.resources (Python 3.9+)
     try:

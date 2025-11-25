@@ -10,10 +10,41 @@ from typing import List, Optional
 import shutil
 
 try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Python < 3.9
+    import importlib_resources as pkg_resources
+
+try:
     from ai_coding_standards import PACKAGE_ROOT
 except ImportError:
     # Fallback for development
     PACKAGE_ROOT = Path(__file__).parent.parent.parent
+
+
+def _get_package_data_path(file_path: str) -> Optional[Path]:
+    """Get path to a file in the package data.
+    
+    Args:
+        file_path: Relative path to file from package root
+    
+    Returns:
+        Path to file if found, None otherwise
+    """
+    try:
+        # Try to get from installed package
+        with pkg_resources.path("ai_coding_standards", file_path) as p:
+            return Path(p)
+    except (ModuleNotFoundError, FileNotFoundError, TypeError):
+        # Fall back to looking in PACKAGE_ROOT (development mode)
+        potential_path = PACKAGE_ROOT / file_path
+        if potential_path.exists():
+            return potential_path
+        # Also try parent (if we're in src/)
+        potential_path = PACKAGE_ROOT.parent / file_path
+        if potential_path.exists():
+            return potential_path
+    return None
 
 
 def get_config_files() -> List[Path]:
@@ -26,13 +57,22 @@ def get_config_files() -> List[Path]:
         ".pre-commit-config.yaml",
         ".cursorrules",
     ]
-    # Try package root first, then fallback to parent of src/
-    base_paths = [PACKAGE_ROOT, PACKAGE_ROOT.parent]
-    for base_path in base_paths:
-        files = [base_path / file for file in config_files if (base_path / file).exists()]
-        if files:
-            return files
-    return []
+    
+    found_files = []
+    for file_name in config_files:
+        # Try package data first (when installed)
+        file_path = _get_package_data_path(file_name)
+        if file_path and file_path.exists():
+            found_files.append(file_path)
+        else:
+            # Fallback to looking in PACKAGE_ROOT (development)
+            for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
+                potential = base_path / file_name
+                if potential.exists():
+                    found_files.append(potential)
+                    break
+    
+    return found_files
 
 
 def get_documentation_files() -> List[Path]:
@@ -43,13 +83,22 @@ def get_documentation_files() -> List[Path]:
         "AI_PROMPT_STANDARDS.md",
         "AI_PROMPT_STANDARDS_QUICK_REF.md",
     ]
-    # Try package root first, then fallback to parent of src/
-    base_paths = [PACKAGE_ROOT, PACKAGE_ROOT.parent]
-    for base_path in base_paths:
-        files = [base_path / file for file in doc_files if (base_path / file).exists()]
-        if files:
-            return files
-    return []
+    
+    found_files = []
+    for file_name in doc_files:
+        # Try package data first (when installed)
+        file_path = _get_package_data_path(file_name)
+        if file_path and file_path.exists():
+            found_files.append(file_path)
+        else:
+            # Fallback to looking in PACKAGE_ROOT (development)
+            for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
+                potential = base_path / file_name
+                if potential.exists():
+                    found_files.append(potential)
+                    break
+    
+    return found_files
 
 
 def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
@@ -64,19 +113,56 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
     cursor_rules_dir.mkdir(parents=True, exist_ok=True)
 
     # Find source rules directory
-    base_paths = [PACKAGE_ROOT, PACKAGE_ROOT.parent]
-    source_rules_dir = None
-    for base_path in base_paths:
-        potential_dir = base_path / ".cursor" / "rules"
-        if potential_dir.exists():
-            source_rules_dir = potential_dir
-            break
-
+    # Try package data first (when installed)
+    try:
+        # Try to access .cursor/rules from package
+        cursor_rules_path = _get_package_data_path(".cursor/rules")
+        if cursor_rules_path and cursor_rules_path.exists():
+            source_rules_dir = cursor_rules_path
+        else:
+            # Fallback to development mode
+            source_rules_dir = None
+            for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
+                potential_dir = base_path / ".cursor" / "rules"
+                if potential_dir.exists():
+                    source_rules_dir = potential_dir
+                    break
+    except Exception:
+        source_rules_dir = None
+    
     if not source_rules_dir or not source_rules_dir.exists():
+        # Try alternative: look for rules as package data files
+        rule_file_names = [
+            "function_standards.mdc",
+            "documentation_standards.mdc",
+            "error_handling.mdc",
+            "naming_conventions.mdc",
+            "testing_standards.mdc",
+            "code_organization.mdc",
+        ]
+        rule_files = []
+        for rule_name in rule_file_names:
+            rule_path = _get_package_data_path(f".cursor/rules/{rule_name}")
+            if rule_path and rule_path.exists():
+                rule_files.append(rule_path)
+        
+        if rule_files:
+            # Copy individual files
+            for rule_file in rule_files:
+                target_path = cursor_rules_dir / rule_file.name
+                if target_path.exists() and not overwrite:
+                    continue
+                shutil.copy2(rule_file, target_path)
+                print(f"✓ Installed Cursor rule: {rule_file.name}")
+            
+            if rule_files:
+                print(f"\n✓ Installed {len(rule_files)} Cursor rule file(s) to {cursor_rules_dir}")
+            return
+        
         print("Warning: Cursor rules directory not found in package")
         return
-
-    # Copy all .mdc files
+    
+    # Copy all .mdc files from directory
     rule_files = list(source_rules_dir.glob("*.mdc"))
     installed = []
 

@@ -12,6 +12,9 @@ license = "MIT"
 authors = [
     {name = "AI Coding Standards Team"}
 ]
+dependencies = [
+    "importlib-resources>=5.0.0; python_version<'3.9'",
+]
 keywords = ["coding-standards", "python", "ai", "code-quality", "linting", "formatting"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -38,6 +41,8 @@ dev = [
     "coverage>=7.2.0",
     "pre-commit>=3.0.0",
 ]
+# For Python < 3.9 compatibility
+importlib_resources = ["importlib-resources>=5.0.0; python_version<'3.9'"]
 
 [project.scripts]
 ai-coding-standards = "ai_coding_standards.cli:main"
@@ -61,6 +66,8 @@ ai_coding_standards = [
     ".editorconfig",
     ".flake8",
     ".pylintrc",
+    ".cursorrules",
+    ".cursor/rules/*.mdc",
 ]
 
 [tool.black]

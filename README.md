@@ -209,7 +209,7 @@ See the [`examples/`](examples/) directory for code examples demonstrating:
 
 ## 🛠️ CLI Tool
 
-The package includes a CLI tool for easy installation:
+The package includes a CLI tool for easy installation and compliance checking:
 
 ```bash
 # Show package information
@@ -221,11 +221,39 @@ ai-coding-standards install
 # Install with options (including Cursor IDE support)
 ai-coding-standards install --overwrite --docs --pre-commit --cursor
 
+# Check code compliance
+ai-coding-standards check-compliance
+
+# Auto-fix compliance issues
+ai-coding-standards fix-compliance
+
 # Install in specific directory
 ai-coding-standards install /path/to/project
 ```
 
 See [INSTALLATION.md](INSTALLATION.md) for complete CLI documentation.
+
+## 👥 For New Developers
+
+**New to the team?** Start here:
+
+1. **Quick Setup** (5 minutes): See [ONBOARDING.md](ONBOARDING.md)
+2. **Install Standards**: `ai-coding-standards install --cursor --docs --pre-commit`
+3. **Read Quick Reference**: `CODING_STANDARDS_QUICK_REF.md`
+
+## 🔄 Bringing Code Into Compliance
+
+**Have existing code that needs to meet standards?**
+
+1. **Check Compliance**: `ai-coding-standards check-compliance`
+2. **Auto-Fix**: `ai-coding-standards fix-compliance`
+3. **Full Guide**: See [CODE_COMPLIANCE.md](CODE_COMPLIANCE.md)
+
+The compliance guide covers:
+- Automated fixes (formatting, imports)
+- Manual refactoring strategies
+- Migration approaches (incremental, file-by-file, etc.)
+- Common scenarios and solutions
 
 ## 🤖 Agentic IDE Integration (Cursor)
 

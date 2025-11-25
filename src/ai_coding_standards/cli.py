@@ -38,7 +38,7 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
             return potential_path
     
     # Then try package data directory (when installed)
-    # Try multiple methods to find the package location
+    # Method 1: Use importlib.util to find package location
     try:
         import importlib.util
         spec = importlib.util.find_spec("ai_coding_standards")
@@ -50,26 +50,49 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     except Exception:
         pass
     
-    # Try using importlib.resources
+    # Method 2: Use importlib.resources (Python 3.9+)
     try:
         if hasattr(pkg_resources, "files"):
             pkg = pkg_resources.files("ai_coding_standards")
             data_path = pkg / "data" / file_path
             if data_path.is_file():
-                # Try to get actual path
+                # For Python 3.9+, use as_path()
                 try:
                     return data_path.as_path()
-                except AttributeError:
+                except (AttributeError, TypeError):
                     # Fallback: read and write to temp file
                     import tempfile
-                    temp_file = Path(tempfile.gettempdir()) / f"ai_coding_standards_{Path(file_path).name}"
+                    import hashlib
+                    # Create unique temp file name
+                    file_hash = hashlib.md5(str(file_path).encode()).hexdigest()[:8]
+                    temp_file = Path(tempfile.gettempdir()) / f"ai_coding_standards_{file_hash}_{Path(file_path).name}"
                     if not temp_file.exists():
                         temp_file.write_bytes(data_path.read_bytes())
                     return temp_file
     except Exception:
         pass
     
-    # Fallback: try pkg_resources.path()
+    # Method 3: Try pkg_resources.resource_filename (most reliable for installed packages)
+    try:
+        import pkg_resources as old_pkg_resources
+        # Try data/ subdirectory
+        try:
+            resource_path = old_pkg_resources.resource_filename("ai_coding_standards", f"data/{file_path}")
+            if Path(resource_path).exists():
+                return Path(resource_path)
+        except Exception:
+            pass
+        # Try direct
+        try:
+            resource_path = old_pkg_resources.resource_filename("ai_coding_standards", file_path)
+            if Path(resource_path).exists():
+                return Path(resource_path)
+        except Exception:
+            pass
+    except Exception:
+        pass
+    
+    # Method 4: Try pkg_resources.path()
     try:
         with pkg_resources.path("ai_coding_standards.data", file_path) as p:
             return Path(p)
@@ -149,14 +172,31 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
     
     # If not found, try package data
     if not rule_files:
-        for rule_name in rule_file_names:
-            # Try in data/.cursor/rules/
-            rule_path = _get_package_data_path(f"data/.cursor/rules/{rule_name}")
-            if not rule_path or not rule_path.exists():
-                # Try alternative paths
-                rule_path = _get_package_data_path(f".cursor/rules/{rule_name}")
-            if rule_path and rule_path.exists():
-                rule_files.append(rule_path)
+        # Try to find the package data directory
+        try:
+            import importlib.util
+            spec = importlib.util.find_spec("ai_coding_standards")
+            if spec and spec.origin:
+                pkg_dir = Path(spec.origin).parent
+                rules_dir = pkg_dir / "data" / ".cursor" / "rules"
+                if rules_dir.exists():
+                    rule_files = list(rules_dir.glob("*.mdc"))
+        except Exception:
+            pass
+        
+        # If still not found, try individual files
+        if not rule_files:
+            for rule_name in rule_file_names:
+                # Try multiple paths
+                for path_variant in [
+                    f".cursor/rules/{rule_name}",
+                    f"data/.cursor/rules/{rule_name}",
+                    rule_name,
+                ]:
+                    rule_path = _get_package_data_path(path_variant)
+                    if rule_path and rule_path.exists():
+                        rule_files.append(rule_path)
+                        break
     
     if not rule_files:
         print("Warning: Cursor rules directory not found in package")

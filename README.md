@@ -79,13 +79,14 @@ After installation, use the CLI tool to set up your project:
 ai-coding-standards install
 
 # With all options
-ai-coding-standards install --overwrite --docs --pre-commit
+ai-coding-standards install --overwrite --docs --pre-commit --cursor
 ```
 
 This will:
 - Copy configuration files (`.editorconfig`, `.flake8`, `.pylintrc`, `pyproject.toml`)
 - Optionally install documentation files to `docs/standards/`
 - Optionally set up pre-commit hooks
+- Optionally install Cursor IDE rules (`.cursorrules` and `.cursor/rules/`)
 
 ### Running Code Quality Checks
 
@@ -217,14 +218,44 @@ ai-coding-standards info
 # Install standards in current directory
 ai-coding-standards install
 
-# Install with options
-ai-coding-standards install --overwrite --docs --pre-commit
+# Install with options (including Cursor IDE support)
+ai-coding-standards install --overwrite --docs --pre-commit --cursor
 
 # Install in specific directory
 ai-coding-standards install /path/to/project
 ```
 
 See [INSTALLATION.md](INSTALLATION.md) for complete CLI documentation.
+
+## 🤖 Agentic IDE Integration (Cursor)
+
+The standards are fully integrated with Cursor IDE and other agentic IDEs:
+
+### Quick Setup
+
+```bash
+# Install with Cursor support
+ai-coding-standards install --cursor
+```
+
+This installs:
+- `.cursorrules` - Main rules file that Cursor reads automatically
+- `.cursor/rules/` - Granular rule files for specific standards
+
+### How It Works
+
+When you open your project in Cursor, it automatically:
+- Reads `.cursorrules` from the project root
+- Loads rules from `.cursor/rules/` directory
+- Applies these standards to all AI-generated code
+
+The AI assistant will automatically follow your coding standards when:
+- Generating new code
+- Refactoring existing code
+- Suggesting improvements
+- Answering questions about code
+
+See [CURSOR_SETUP.md](CURSOR_SETUP.md) for detailed setup instructions and examples.
 
 ## 🤝 Contributing
 

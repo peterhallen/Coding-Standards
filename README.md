@@ -32,39 +32,63 @@ This repository contains:
 
 ### Installation
 
+#### Option 1: Install as Package (Recommended)
+
+Install directly from GitHub:
+
+```bash
+pip install git+https://github.com/peterhallen/AI-coding-standards.git
+```
+
+Or with development dependencies:
+
+```bash
+pip install "git+https://github.com/peterhallen/AI-coding-standards.git#egg=ai-coding-standards[dev]"
+```
+
+Then install standards in your project:
+
+```bash
+ai-coding-standards install
+```
+
+#### Option 2: Manual Installation
+
 1. Clone this repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/peterhallen/AI-coding-standards.git
 cd AI-coding-standards
 ```
 
-2. Install development dependencies:
+2. Install in development mode:
 ```bash
-pip install -r requirements-dev.txt
+pip install -e .
 ```
 
-3. Verify installation:
+3. Install standards in your project:
 ```bash
-black --version
-isort --version
-mypy --version
-pytest --version
+ai-coding-standards install
 ```
 
 ### Using the Standards in Your Project
 
-1. Copy the configuration files to your project:
-   - `pyproject.toml` - Tooling configuration
-   - `.editorconfig` - Editor settings
-   - `.flake8` - Flake8 linter config
-   - `.pylintrc` - Pylint config
+After installation, use the CLI tool to set up your project:
 
-2. Install the development dependencies in your project:
 ```bash
-pip install -r requirements-dev.txt
+# Basic installation
+ai-coding-standards install
+
+# With all options
+ai-coding-standards install --overwrite --docs --pre-commit
 ```
 
-3. Run code quality checks:
+This will:
+- Copy configuration files (`.editorconfig`, `.flake8`, `.pylintrc`, `pyproject.toml`)
+- Optionally install documentation files to `docs/standards/`
+- Optionally set up pre-commit hooks
+
+### Running Code Quality Checks
+
 ```bash
 # Format code
 black .
@@ -83,27 +107,41 @@ pylint .
 pytest --cov
 ```
 
+See [INSTALLATION.md](INSTALLATION.md) for detailed installation instructions.
+
 ## 📚 Documentation
 
-### Full Documentation
+### Coding Standards
 
-See [`CODING_STANDARDS.md`](CODING_STANDARDS.md) for comprehensive guidelines covering:
+- **[CODING_STANDARDS.md](CODING_STANDARDS.md)** - Comprehensive coding standards covering:
+  - General principles (DRY, KISS, YAGNI)
+  - Code organization and structure
+  - Function and method guidelines
+  - Naming conventions
+  - Documentation standards
+  - Error handling patterns
+  - Performance best practices
+  - Python-specific standards
+  - Testing standards
+  - AI coder collaboration guidelines
+  - Code review checklist
 
-- General principles (DRY, KISS, YAGNI)
-- Code organization and structure
-- Function and method guidelines
-- Naming conventions
-- Documentation standards
-- Error handling patterns
-- Performance best practices
-- Python-specific standards
-- Testing standards
-- AI coder collaboration guidelines
-- Code review checklist
+- **[CODING_STANDARDS_QUICK_REF.md](CODING_STANDARDS_QUICK_REF.md)** - Condensed one-page reference guide
 
-### Quick Reference
+### AI Prompt Standards
 
-See [`CODING_STANDARDS_QUICK_REF.md`](CODING_STANDARDS_QUICK_REF.md) for a condensed one-page reference guide.
+- **[AI_PROMPT_STANDARDS.md](AI_PROMPT_STANDARDS.md)** - Comprehensive guide for writing effective prompts when working with AI coding assistants:
+  - Prompt structure and best practices
+  - Context management
+  - Task specification
+  - Code generation prompts
+  - Code review prompts
+  - Debugging prompts
+  - Documentation prompts
+  - Common patterns and templates
+  - Anti-patterns to avoid
+
+This document helps developers write better prompts that lead to higher quality AI-generated code.
 
 ## 🛠️ Tooling Configuration
 
@@ -167,6 +205,26 @@ See the [`examples/`](examples/) directory for code examples demonstrating:
 - Type hints usage
 - Testing patterns
 - Code organization
+
+## 🛠️ CLI Tool
+
+The package includes a CLI tool for easy installation:
+
+```bash
+# Show package information
+ai-coding-standards info
+
+# Install standards in current directory
+ai-coding-standards install
+
+# Install with options
+ai-coding-standards install --overwrite --docs --pre-commit
+
+# Install in specific directory
+ai-coding-standards install /path/to/project
+```
+
+See [INSTALLATION.md](INSTALLATION.md) for complete CLI documentation.
 
 ## 🤝 Contributing
 

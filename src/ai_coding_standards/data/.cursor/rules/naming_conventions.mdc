@@ -1,0 +1,86 @@
+---
+description: Naming conventions for functions, variables, classes, and constants
+globs: ["**/*.py"]
+alwaysApply: true
+priority: high
+---
+
+# Naming Conventions
+
+[CRITICAL] Follow these naming conventions consistently:
+
+## Functions and Variables
+- **Style**: `snake_case`
+- **Function names**: Use verbs that describe what the function does
+- **Variable names**: Use nouns that describe what the variable represents
+- **Boolean variables**: Use `is_`, `has_`, `can_`, `should_` prefixes
+
+**Examples:**
+```python
+# Functions
+def calculate_total_cost() -> float:
+    pass
+
+def is_user_authenticated(user: User) -> bool:
+    pass
+
+def has_permission(user: User, resource: str) -> bool:
+    pass
+
+# Variables
+user_account_id = "123456789"
+is_active = True
+has_admin_access = False
+monthly_cost = 150.50
+```
+
+## Classes
+- **Style**: `PascalCase`
+- **Names**: Use nouns that describe what the class represents
+- **Avoid abbreviations** unless they're widely understood
+
+**Examples:**
+```python
+class SecurityAssessment:
+    pass
+
+class CostAnalyzer:
+    pass
+
+class UserAccountManager:
+    pass
+```
+
+## Constants
+- **Style**: `UPPER_SNAKE_CASE`
+- **Place**: Module level or class level
+- **Use**: For values that don't change during program execution
+
+**Examples:**
+```python
+MAX_RETRY_ATTEMPTS = 3
+DEFAULT_TIMEOUT_SECONDS = 30
+AWS_REGION_US_EAST_1 = "us-east-1"
+```
+
+## Private Members
+- **Style**: Leading underscore `_private_method`
+- **Use**: For methods, functions, or variables that are internal to a module or class
+- **Double underscore**: Avoid `__private` (name mangling) unless necessary
+
+**Examples:**
+```python
+class SecurityAssessment:
+    def __init__(self):
+        self._internal_cache = {}
+        self._config = self._load_config()
+    
+    def _load_config(self) -> Dict:
+        """Private method - internal implementation detail."""
+        pass
+```
+
+## Module Names
+- **Style**: `snake_case`
+- **Short and descriptive**: `security_assessment.py` not `sec_assess.py`
+- **Avoid**: Single letters, abbreviations, generic names like `utils.py` (be more specific)

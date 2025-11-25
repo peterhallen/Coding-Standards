@@ -1,0 +1,78 @@
+---
+description: Code organization and module structure
+globs: ["**/*.py"]
+alwaysApply: true
+priority: medium
+---
+
+# Code Organization Standards
+
+[IMPORTANT] Follow this module structure consistently:
+
+## Module Structure Order
+
+1. **Module docstring** - Describe the module's purpose
+2. **Imports** - Organized by standard library, third-party, local
+3. **Constants** - Module-level constants
+4. **Classes** - Public classes first, then private
+5. **Functions** - Public functions first, then private
+6. **Main execution** - `if __name__ == "__main__":` block
+
+## Example Structure
+
+```python
+"""
+Module for AWS security assessment operations.
+
+This module provides functions for analyzing AWS account security
+configurations and compliance with CIS benchmarks.
+"""
+
+# Standard library imports
+import json
+from datetime import datetime
+from typing import Dict, List
+
+# Third-party imports
+import boto3
+from botocore.exceptions import ClientError
+
+# Local imports
+from .config import load_config
+from .utils import format_timestamp
+
+# Constants
+MAX_RETRIES = 3
+DEFAULT_TIMEOUT = 30
+
+# Classes
+class SecurityAssessment:
+    """Main class for security assessments."""
+    pass
+
+# Functions
+def assess_account(account_id: str) -> Dict:
+    """Assess security configuration for an account."""
+    pass
+
+# Private functions
+def _validate_config(config: Dict) -> bool:
+    """Validate configuration dictionary."""
+    pass
+```
+
+## Import Organization
+
+Organize imports in this order:
+1. Standard library imports
+2. Related third-party imports
+3. Local application/library imports
+
+Separate each group with a blank line.
+
+## File and Module Limits
+
+- **Maximum module length**: 500 lines
+  - If a module exceeds this, consider splitting into multiple modules
+- **Maximum class length**: 300 lines
+  - If a class exceeds this, consider composition or splitting into multiple classes

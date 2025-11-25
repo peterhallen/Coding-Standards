@@ -60,14 +60,7 @@ include-package-data = true
 
 [tool.setuptools.package-data]
 ai_coding_standards = [
-    "*.md",
-    "*.yaml",
-    "*.toml",
-    ".editorconfig",
-    ".flake8",
-    ".pylintrc",
-    ".cursorrules",
-    ".cursor/rules/*.mdc",
+    "data/**/*",
 ]
 
 [tool.black]

@@ -1,0 +1,64 @@
+---
+description: Function and method guidelines - length, complexity, and structure
+globs: ["**/*.py"]
+alwaysApply: true
+priority: high
+---
+
+# Function and Method Standards
+
+[CRITICAL] All functions MUST follow these standards:
+
+## Function Length
+- **Maximum**: 50 lines per function
+- **Preferred**: 30 lines or fewer
+- If a function exceeds 50 lines, extract helper functions
+
+## Function Parameters
+- **Maximum**: 5 parameters per function
+- **Preferred**: 3 or fewer parameters
+- For functions requiring more than 5 parameters, use dataclasses or TypedDict
+
+## Cyclomatic Complexity
+- **Maximum**: 10 per function
+- **Preferred**: 5 or lower
+- Reduce complexity by:
+  - Extracting complex conditions into well-named functions
+  - Using early returns to reduce nesting
+  - Replacing nested conditionals with guard clauses
+
+## Nesting Depth
+- **Maximum**: 3 levels of nesting
+- **Preferred**: 2 levels or fewer
+- Use early returns and extract functions to reduce nesting
+
+## Example
+
+**Good:**
+```python
+def process_data(data: List[Dict]) -> List[Dict]:
+    """Process data with validation."""
+    if not data:
+        return []
+    
+    validated = _validate_data(data)
+    if not validated:
+        return []
+    
+    return _transform_data(validated)
+```
+
+**Bad:**
+```python
+def process_data(data):
+    if data:
+        if len(data) > 0:
+            validated = []
+            for item in data:
+                if item:
+                    if 'id' in item:
+                        validated.append(item)
+            if validated:
+                return transform(validated)
+    return []
+```

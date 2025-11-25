@@ -31,32 +31,43 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     Returns:
         Path to file if found, None otherwise
     """
-    # First try development mode (files in repo)
+    # First try development mode (files in repo root)
     for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
         potential_path = base_path / file_path
         if potential_path.exists():
             return potential_path
     
-    # Then try installed package
+    # Then try package data directory (when installed)
     try:
-        # For Python 3.9+, use files() API
+        # Try package data directory
         if hasattr(pkg_resources, "files"):
             try:
                 pkg = pkg_resources.files("ai_coding_standards")
-                resource = pkg / file_path
-                if resource.is_file():
-                    # Extract to temp location if needed
-                    import tempfile
-                    temp_file = Path(tempfile.gettempdir()) / f"ai_coding_standards_{Path(file_path).name}"
-                    temp_file.write_bytes(resource.read_bytes())
-                    return temp_file
+                # Try in data/ subdirectory
+                data_path = pkg / "data" / file_path
+                if data_path.is_file():
+                    return Path(str(data_path))
+                # Also try direct
+                direct_path = pkg / file_path
+                if direct_path.is_file():
+                    return Path(str(direct_path))
             except Exception:
                 pass
         
-        # Fallback: try path() API
-        with pkg_resources.path("ai_coding_standards", file_path) as p:
-            return Path(p)
-    except (ModuleNotFoundError, FileNotFoundError, TypeError, AttributeError):
+        # Fallback: try path() API with data/
+        try:
+            with pkg_resources.path("ai_coding_standards.data", file_path) as p:
+                return Path(p)
+        except Exception:
+            pass
+        
+        # Try direct path
+        try:
+            with pkg_resources.path("ai_coding_standards", file_path) as p:
+                return Path(p)
+        except Exception:
+            pass
+    except Exception:
         pass
     
     return None
@@ -75,17 +86,9 @@ def get_config_files() -> List[Path]:
     
     found_files = []
     for file_name in config_files:
-        # Try package data first (when installed)
         file_path = _get_package_data_path(file_name)
         if file_path and file_path.exists():
             found_files.append(file_path)
-        else:
-            # Fallback to looking in PACKAGE_ROOT (development)
-            for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
-                potential = base_path / file_name
-                if potential.exists():
-                    found_files.append(potential)
-                    break
     
     return found_files
 
@@ -101,17 +104,9 @@ def get_documentation_files() -> List[Path]:
     
     found_files = []
     for file_name in doc_files:
-        # Try package data first (when installed)
         file_path = _get_package_data_path(file_name)
         if file_path and file_path.exists():
             found_files.append(file_path)
-        else:
-            # Fallback to looking in PACKAGE_ROOT (development)
-            for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
-                potential = base_path / file_name
-                if potential.exists():
-                    found_files.append(potential)
-                    break
     
     return found_files
 
@@ -127,7 +122,7 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
     cursor_rules_dir = target_dir / ".cursor" / "rules"
     cursor_rules_dir.mkdir(parents=True, exist_ok=True)
 
-    # Find source rules - try multiple approaches
+    # Find source rules
     rule_file_names = [
         "function_standards.mdc",
         "documentation_standards.mdc",
@@ -137,31 +132,25 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
         "code_organization.mdc",
     ]
     
-    # First try: development mode - look for .cursor/rules directory
-    source_rules_dir = None
+    rule_files = []
+    
+    # Try development mode first (files in repo)
     for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
         potential_dir = base_path / ".cursor" / "rules"
         if potential_dir.exists():
-            source_rules_dir = potential_dir
+            rule_files = list(potential_dir.glob("*.mdc"))
             break
     
-    rule_files = []
-    
-    if source_rules_dir and source_rules_dir.exists():
-        # Development mode: get files from directory
-        rule_files = list(source_rules_dir.glob("*.mdc"))
-    else:
-        # Installed package mode: get files individually
+    # If not found, try package data
+    if not rule_files:
         for rule_name in rule_file_names:
-            # Try as package data
-            rule_path = _get_package_data_path(f".cursor/rules/{rule_name}")
+            # Try in data/.cursor/rules/
+            rule_path = _get_package_data_path(f"data/.cursor/rules/{rule_name}")
+            if not rule_path or not rule_path.exists():
+                # Try alternative paths
+                rule_path = _get_package_data_path(f".cursor/rules/{rule_name}")
             if rule_path and rule_path.exists():
                 rule_files.append(rule_path)
-            else:
-                # Try alternative path
-                rule_path = _get_package_data_path(rule_name)
-                if rule_path and rule_path.exists():
-                    rule_files.append(rule_path)
     
     if not rule_files:
         print("Warning: Cursor rules directory not found in package")

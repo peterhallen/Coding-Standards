@@ -24,8 +24,15 @@ def get_config_files() -> List[Path]:
         ".pylintrc",
         "pyproject.toml",
         ".pre-commit-config.yaml",
+        ".cursorrules",
     ]
-    return [PACKAGE_ROOT / file for file in config_files if (PACKAGE_ROOT / file).exists()]
+    # Try package root first, then fallback to parent of src/
+    base_paths = [PACKAGE_ROOT, PACKAGE_ROOT.parent]
+    for base_path in base_paths:
+        files = [base_path / file for file in config_files if (base_path / file).exists()]
+        if files:
+            return files
+    return []
 
 
 def get_documentation_files() -> List[Path]:
@@ -43,6 +50,50 @@ def get_documentation_files() -> List[Path]:
         if files:
             return files
     return []
+
+
+def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
+    """Install Cursor IDE rules to target directory.
+
+    Args:
+        target_dir: Directory where rules should be installed
+        overwrite: Whether to overwrite existing files
+    """
+    target_dir = Path(target_dir).resolve()
+    cursor_rules_dir = target_dir / ".cursor" / "rules"
+    cursor_rules_dir.mkdir(parents=True, exist_ok=True)
+
+    # Find source rules directory
+    base_paths = [PACKAGE_ROOT, PACKAGE_ROOT.parent]
+    source_rules_dir = None
+    for base_path in base_paths:
+        potential_dir = base_path / ".cursor" / "rules"
+        if potential_dir.exists():
+            source_rules_dir = potential_dir
+            break
+
+    if not source_rules_dir or not source_rules_dir.exists():
+        print("Warning: Cursor rules directory not found in package")
+        return
+
+    # Copy all .mdc files
+    rule_files = list(source_rules_dir.glob("*.mdc"))
+    installed = []
+
+    for rule_file in rule_files:
+        target_path = cursor_rules_dir / rule_file.name
+
+        if target_path.exists() and not overwrite:
+            continue
+
+        shutil.copy2(rule_file, target_path)
+        installed.append(rule_file.name)
+        print(f"✓ Installed Cursor rule: {rule_file.name}")
+
+    if installed:
+        print(f"\n✓ Installed {len(installed)} Cursor rule file(s) to {cursor_rules_dir}")
+    else:
+        print("No Cursor rules to install")
 
 
 def install_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
@@ -204,6 +255,11 @@ def main() -> None:
         action="store_true",
         help="Set up pre-commit hooks",
     )
+    install_parser.add_argument(
+        "--cursor",
+        action="store_true",
+        help="Install Cursor IDE rules (.cursorrules and .cursor/rules/)",
+    )
 
     # Info command
     subparsers.add_parser("info", help="Show package information")
@@ -223,6 +279,9 @@ def main() -> None:
 
         if args.pre_commit:
             setup_pre_commit(target)
+
+        if args.cursor:
+            install_cursor_rules(target, overwrite=args.overwrite)
 
     elif args.command == "info":
         show_info()

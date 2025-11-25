@@ -558,6 +558,9 @@ def main() -> None:
 
     # Info command
     subparsers.add_parser("info", help="Show package information")
+    
+    # Debug command
+    subparsers.add_parser("debug-paths", help="Debug package data paths (for troubleshooting)")
 
     args = parser.parse_args()
 
@@ -623,7 +626,11 @@ def main() -> None:
 
     elif args.command == "info":
         show_info()
-
+    
+    elif args.command == "debug-paths":
+        from ai_coding_standards.debug_paths import main as debug_main
+        debug_main()
+    
     else:
         parser.print_help()
 

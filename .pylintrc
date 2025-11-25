@@ -1,0 +1,167 @@
+[MASTER]
+# Use multiple processes to speed up Pylint
+jobs=0
+
+# Python code to execute, usually for sys.path manipulation
+init-hook='import sys; sys.path.append(".")'
+
+# Pickle collected data for later comparisons
+persistent=yes
+
+# List of plugins (as comma separated values of python modules names)
+load-plugins=
+
+[MESSAGES CONTROL]
+# Disable specific warnings
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods,
+    too-many-instance-attributes,
+    too-many-arguments,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    too-many-return-statements,
+    too-many-boolean-expressions,
+    too-many-public-methods,
+    too-many-nested-blocks,
+    too-complex,
+    import-error,
+    no-member,
+    fixme,
+    consider-using-f-string
+
+# Enable specific checks
+enable=
+    missing-docstring,
+    invalid-name,
+    line-too-long,
+    too-many-arguments,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    too-many-return-statements,
+    too-many-boolean-expressions,
+    too-many-public-methods,
+    too-many-nested-blocks,
+    too-complex
+
+[FORMAT]
+# Maximum number of characters on a single line
+max-line-length=120
+
+# Regexp for a line that is allowed to be longer than the limit
+ignore-long-lines=^\s*(# )?<?https?://\S+>?$
+
+# Number of spaces of indent required inside a hanging or continued line
+indent-after-paren=4
+
+# String used as indentation unit
+indent-string='    '
+
+# Expected format of line ending
+expected-line-ending-format=
+
+[BASIC]
+# Good variable names which should always be accepted
+good-names=i,j,k,ex,Run,_,id,pk,db,url,uri,aws,api,cli,json,yaml,html,csv,xml,http,https,ssl,tls,ip,dns,iam,ec2,s3,rds,lambda,vpc,elb,alb,cfn,cdk,sts,ce,cur,ta,gd,sh,ct,co,sp,wa,org,cfg,config,env,os,io,str,int,float,bool,list,dict,set,tuple,any,all,min,max,sum,len,abs,round,range,enumerate,zip,map,filter,reduce,sorted,reversed,isinstance,type,hasattr,getattr,setattr,delattr,dir,help,print,input,open,file,read,write,close,exit,quit,exec,eval,compile,import,from,as,if,else,elif,for,while,break,continue,pass,return,yield,def,class,try,except,finally,raise,assert,with,as,global,nonlocal,lambda,None,True,False,self,cls,super,property,staticmethod,classmethod,abstractmethod,dataclass,field,typing,Optional,Union,List,Dict,Set,Tuple,Any,Callable,TypeVar,Generic,Protocol,abc,enum,dataclasses,pathlib,json,yaml,datetime,timedelta,timezone,zoneinfo,logging,logger,log,debug,info,warning,error,critical,exception,traceback,exc_info,stack_info,format_exc,print_exc,print_tb,format_exception,format_exception_only,format_list,format_stack,extract_stack,extract_tb,walk_stack,walk_tb,clear_frames,FrameSummary,TracebackException,format_exception,format_exception_only,format_list,format_stack,extract_stack,extract_tb,walk_stack,walk_tb,clear_frames,FrameSummary,TracebackException
+
+# Bad variable names which should always be refused
+bad-names=foo,bar,baz,toto,tutu,tata
+
+# Include a hint for the correct naming format with invalid-name
+include-naming-hint=yes
+
+# Regular expression matching correct argument names
+argument-rgx=[a-z_][a-z0-9_]{2,30}$
+
+# Regular expression matching correct attribute names
+attr-rgx=[a-z_][a-z0-9_]{2,30}$
+
+# Regular expression matching correct class attribute names
+class-attribute-rgx=([A-Z][A-Z0-9_]*|__[a-z][a-z0-9_]*__|__[A-Z][A-Z0-9_]*__)$
+
+# Regular expression matching correct class names
+class-rgx=[A-Z][a-zA-Z0-9]*$
+
+# Regular expression matching correct constant names
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+# Regular expression matching correct function names
+function-rgx=[a-z_][a-z0-9_]{2,30}$
+
+# Regular expression matching correct method names
+method-rgx=[a-z_][a-z0-9_]{2,30}$
+
+# Regular expression matching correct module names
+module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+
+# Regular expression matching correct variable names
+variable-rgx=[a-z_][a-z0-9_]{2,30}$
+
+# Regular expression which should only match function or class names that do
+# not require a docstring
+no-docstring-rgx=^_
+
+# Minimum line length for functions, classes, etc.
+min-similarity-lines=4
+
+[DESIGN]
+# Maximum number of arguments for function / method
+max-args=5
+
+# Maximum number of attributes for a class
+max-attributes=10
+
+# Maximum number of boolean expressions in an if statement
+max-bool-expr=5
+
+# Maximum number of branch for function / method body
+max-branches=10
+
+# Maximum number of locals for function / method body
+max-locals=15
+
+# Maximum number of parents for a class
+max-parents=7
+
+# Maximum number of public methods for a class
+max-public-methods=20
+
+# Maximum number of return / yield for function / method body
+max-returns=6
+
+# Maximum number of statements in function / method body
+max-statements=50
+
+# Minimum number of public methods for a class
+min-public-methods=0
+
+# Maximum number of nested blocks for function / method body
+max-nested-blocks=3
+
+# Maximum cyclomatic complexity
+max-complexity=10
+
+[IMPORTS]
+# Allow wildcard imports from modules that define __all__
+allow-wildcard-with-all=no
+
+# Analyse import fallback blocks
+analyse-fallback-blocks=no
+
+# Force import order to recognize a module as part of the standard library
+known-standard-library=
+
+# Force import order to recognize a module as part of a third party library
+known-third-party=boto3,botocore,yaml,argparse
+
+# Couples of modules and preferred modules, separated by a comma
+preferred-modules=
+
+[EXCEPTIONS]
+# Exceptions that will emit a warning when being caught
+overgeneral-exceptions=BaseException,Exception
+

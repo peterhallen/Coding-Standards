@@ -1,0 +1,24 @@
+# Code Formatting
+black>=23.0.0
+isort>=5.12.0
+
+# Type Checking
+mypy>=1.0.0
+types-requests>=2.28.0
+
+# Linting
+flake8>=6.0.0
+pylint>=2.17.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+
+# Code Quality
+coverage>=7.2.0
+
+# Optional: Additional tools
+# ruff>=0.1.0  # Fast Python linter (alternative to flake8)
+# bandit>=1.7.0  # Security linter
+

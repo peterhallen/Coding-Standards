@@ -41,14 +41,32 @@ python --version
 pip --version
 ```
 
-You should see version numbers. If not, restart your computer and try again.
+You should see version numbers. If not, try one of these:
 
-### Step 3: Create a Virtual Environment
+**Option A**: Restart your computer (simplest)
+
+**Option B**: Refresh PATH in current terminal:
+```powershell
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+```
+
+### Step 3: Set Execution Policy (Required Once)
+
+PowerShell blocks scripts by default. Run this once to allow virtual environment activation:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+```
+
+### Step 4: Create a Virtual Environment
 
 Navigate to your project folder:
 
 ```powershell
 cd C:\path\to\your\project
+
+# Remove any existing venv (if retrying)
+Remove-Item -Recurse -Force .venv -ErrorAction SilentlyContinue
 
 # Create virtual environment
 python -m venv .venv
@@ -57,21 +75,21 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-> **Note**: If you get an execution policy error, run: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+You should see `(.venv)` appear at the start of your prompt.
 
-### Step 4: Install the Package
+### Step 5: Install the Package
 
 ```powershell
 pip install git+https://github.com/peterhallen/AI-coding-standards.git
 ```
 
-### Step 5: Install Standards in Your Project
+### Step 6: Install Standards in Your Project
 
 ```powershell
 ai-coding-standards install --cursor --docs --pre-commit
 ```
 
-### Step 6: Install Development Tools
+### Step 7: Install Development Tools
 
 ```powershell
 pip install black isort mypy flake8 pylint pytest pytest-cov pre-commit

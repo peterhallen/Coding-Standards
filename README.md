@@ -27,88 +27,44 @@ This repository contains:
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- pip (Python package manager)
+- Python 3.8+ (3.11 or 3.12 recommended)
+- Git
 
-### Installation
+> **First time?** See [INSTALLATION.md](INSTALLATION.md) for OS-specific setup (Windows, macOS, Linux).
 
-#### Option 1: Install as Package (Recommended)
-
-Install directly from GitHub:
+### Install in 3 Steps
 
 ```bash
+# 1. Create & activate virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scripts\Activate.ps1  # Windows PowerShell
+
+# 2. Install the package
 pip install git+https://github.com/peterhallen/AI-coding-standards.git
+
+# 3. Install standards in your project
+ai-coding-standards install --cursor --docs --pre-commit
 ```
 
-Or with development dependencies:
+### What Gets Installed
+
+- Configuration files: `.editorconfig`, `.flake8`, `.pylintrc`, `pyproject.toml`
+- Cursor IDE rules: `.cursorrules`, `.cursor/rules/`
+- Documentation: `docs/standards/`
+- Pre-commit hooks
+
+### Run Code Quality Checks
 
 ```bash
-pip install "git+https://github.com/peterhallen/AI-coding-standards.git#egg=ai-coding-standards[dev]"
+black .          # Format code
+isort .          # Sort imports
+flake8 .         # Lint
+mypy .           # Type check
+pytest --cov     # Run tests
 ```
 
-Then install standards in your project:
-
-```bash
-ai-coding-standards install
-```
-
-#### Option 2: Manual Installation
-
-1. Clone this repository:
-```bash
-git clone https://github.com/peterhallen/AI-coding-standards.git
-cd AI-coding-standards
-```
-
-2. Install in development mode:
-```bash
-pip install -e .
-```
-
-3. Install standards in your project:
-```bash
-ai-coding-standards install
-```
-
-### Using the Standards in Your Project
-
-After installation, use the CLI tool to set up your project:
-
-```bash
-# Basic installation
-ai-coding-standards install
-
-# With all options
-ai-coding-standards install --overwrite --docs --pre-commit --cursor
-```
-
-This will:
-- Copy configuration files (`.editorconfig`, `.flake8`, `.pylintrc`, `pyproject.toml`)
-- Optionally install documentation files to `docs/standards/`
-- Optionally set up pre-commit hooks
-- Optionally install Cursor IDE rules (`.cursorrules` and `.cursor/rules/`)
-
-### Running Code Quality Checks
-
-```bash
-# Format code
-black .
-
-# Sort imports
-isort .
-
-# Type checking
-mypy .
-
-# Linting
-flake8 .
-pylint .
-
-# Run tests with coverage
-pytest --cov
-```
-
-See [INSTALLATION.md](INSTALLATION.md) for detailed installation instructions.
+See [INSTALLATION.md](INSTALLATION.md) for detailed OS-specific instructions.
 
 ## 📚 Documentation
 

@@ -25,6 +25,7 @@ Quick reference for verifying the CLI installation worked correctly.
 | `.cursor/rules/naming_conventions.mdc` | Naming rules |
 | `.cursor/rules/testing_standards.mdc` | Test requirements |
 | `.cursor/rules/code_organization.mdc` | Module structure |
+| `.cursor/rules/markdown_standards.mdc` | Markdown documentation |
 
 ### With `--docs` Flag
 
@@ -34,6 +35,9 @@ Quick reference for verifying the CLI installation worked correctly.
 | `docs/standards/CODING_STANDARDS_QUICK_REF.md` | Quick reference |
 | `docs/standards/AI_PROMPT_STANDARDS.md` | Prompt guide |
 | `docs/standards/AI_PROMPT_STANDARDS_QUICK_REF.md` | Prompt quick ref |
+| `docs/standards/MARKDOWN_STANDARDS.md` | Markdown standards |
+| `docs/standards/MARKDOWN_STANDARDS_QUICK_REF.md` | Markdown quick ref |
+| `docs/standards/AI_COLLABORATION_GUIDE.md` | Team collaboration |
 
 ## Verification Commands
 
@@ -73,11 +77,11 @@ pytest --version
 
 ## Summary
 
-**Total files the CLI can install: 18**
+**Total files the CLI can install: 20**
 
 - Configuration files: 6
 - Cursor rules: 7
-- Documentation files: 6
+- Documentation files: 7
 
 ---
 

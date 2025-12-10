@@ -235,6 +235,7 @@ The `ai-coding-standards install` command creates these files in your project:
 | `.pre-commit-config.yaml` | Pre-commit hooks |
 | `.cursorrules` | Cursor IDE rules |
 | `.cursor/rules/*.mdc` | Detailed Cursor rules (with `--cursor`) |
+| `.antigravity/rules/*.mdc` | Detailed Antigravity rules (with `--antigravity`) |
 | `docs/standards/*.md` | Documentation files (with `--docs`) |
 
 ### Verify Installation
@@ -302,6 +303,7 @@ ai-coding-standards fix-compliance
 | `--docs` | Install documentation to `docs/standards/` |
 | `--pre-commit` | Set up pre-commit hooks |
 | `--cursor` | Install Cursor IDE rules |
+| `--antigravity` | Install Antigravity IDE rules |
 
 ---
 

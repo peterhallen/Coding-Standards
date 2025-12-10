@@ -199,6 +199,9 @@ ai-coding-standards install
 # Install with options (including Cursor IDE support)
 ai-coding-standards install --overwrite --docs --pre-commit --cursor
 
+# Install with Antigravity IDE support
+ai-coding-standards install --antigravity
+
 # Check code compliance
 ai-coding-standards check-compliance
 
@@ -262,6 +265,22 @@ The AI assistant will automatically follow your coding standards when:
 - Answering questions about code
 
 See [CURSOR_SETUP.md](CURSOR_SETUP.md) for detailed setup instructions and examples.
+
+## 🛸 Antigravity IDE Integration
+
+The standards are also integrated with Antigravity:
+
+### Quick Setup
+
+```bash
+# Install with Antigravity support
+ai-coding-standards install --antigravity
+```
+
+This installs:
+- `.antigravity/rules/` - Granular rule files for specific standards
+
+These rules enable Antigravity to automatically follow your coding standards.
 
 ## 🤝 Contributing
 

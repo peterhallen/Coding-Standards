@@ -1,0 +1,75 @@
+---
+description: Error handling patterns and exception management
+globs: ["**/*.py"]
+alwaysApply: true
+priority: high
+---
+
+# Error Handling Standards
+
+[CRITICAL] All code MUST follow proper error handling patterns:
+
+## Exception Handling Principles
+
+1. **Be specific**: Catch specific exceptions, not bare `except:`
+2. **Fail fast**: Validate inputs early and raise exceptions immediately
+3. **Provide context**: Include meaningful error messages
+4. **Don't suppress**: Only catch exceptions you can handle
+5. **Log appropriately**: Log errors at appropriate levels
+
+## Exception Types
+
+Use built-in exceptions when appropriate:
+- `ValueError`: Invalid value passed to function
+- `TypeError`: Wrong type passed to function
+- `KeyError`: Missing dictionary key
+- `FileNotFoundError`: File doesn't exist
+- `TimeoutError`: Operation timed out
+
+## Error Handling Pattern
+
+**Good:**
+```python
+def fetch_account_data(account_id: str) -> Dict:
+    """Fetch account data from AWS."""
+    if not account_id or not account_id.isdigit():
+        raise ValueError(f"Invalid account ID: {account_id}")
+    
+    try:
+        sts_client = boto3.client('sts')
+        response = sts_client.get_caller_identity()
+        return response
+    except ClientError as e:
+        error_code = e.response['Error']['Code']
+        if error_code == 'InvalidClientTokenId':
+            raise InvalidAccountError(f"Invalid credentials for account {account_id}") from e
+        raise SecurityAssessmentError(f"AWS API error: {error_code}") from e
+    except Exception as e:
+        raise SecurityAssessmentError(f"Unexpected error: {e}") from e
+```
+
+**Bad:**
+```python
+def fetch_account_data(account_id):
+    try:
+        # No validation
+        sts_client = boto3.client('sts')
+        response = sts_client.get_caller_identity()
+        return response
+    except:  # Too broad, suppresses all errors
+        return {}  # Hides the error
+```
+
+## Custom Exceptions
+
+Create custom exceptions for domain-specific errors:
+
+```python
+class SecurityAssessmentError(Exception):
+    """Base exception for security assessment errors."""
+    pass
+
+class InvalidAccountError(SecurityAssessmentError):
+    """Raised when account ID is invalid."""
+    pass
+```

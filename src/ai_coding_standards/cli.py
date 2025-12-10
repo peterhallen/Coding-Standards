@@ -262,6 +262,86 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
         print("No Cursor rules to install")
 
 
+def install_antigravity_rules(target_dir: Path, overwrite: bool = False) -> None:
+    """Install Antigravity rules to target directory.
+
+    Args:
+        target_dir: Directory where rules should be installed
+        overwrite: Whether to overwrite existing files
+    """
+    target_dir = Path(target_dir).resolve()
+    antigravity_rules_dir = target_dir / ".antigravity" / "rules"
+    antigravity_rules_dir.mkdir(parents=True, exist_ok=True)
+
+    # Find source rules - reusing Cursor rules for now
+    rule_file_names = [
+        "function_standards.mdc",
+        "documentation_standards.mdc",
+        "error_handling.mdc",
+        "naming_conventions.mdc",
+        "testing_standards.mdc",
+        "code_organization.mdc",
+        "markdown_standards.mdc",
+    ]
+    
+    rule_files = []
+    
+    # Try development mode first (files in repo)
+    for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
+        potential_dir = base_path / ".cursor" / "rules"
+        if potential_dir.exists():
+            rule_files = list(potential_dir.glob("*.mdc"))
+            break
+    
+    # If not found, try package data
+    if not rule_files:
+        # Try to find the package data directory
+        try:
+            import importlib.util
+            spec = importlib.util.find_spec("ai_coding_standards")
+            if spec and spec.origin:
+                pkg_dir = Path(spec.origin).parent
+                rules_dir = pkg_dir / "data" / ".cursor" / "rules"
+                if rules_dir.exists():
+                    rule_files = list(rules_dir.glob("*.mdc"))
+        except Exception:
+            pass
+        
+        # If still not found, try individual files
+        if not rule_files:
+            for rule_name in rule_file_names:
+                # Try multiple paths
+                for path_variant in [
+                    f".cursor/rules/{rule_name}",
+                    f"data/.cursor/rules/{rule_name}",
+                    rule_name,
+                ]:
+                    rule_path = _get_package_data_path(path_variant)
+                    if rule_path and rule_path.exists():
+                        rule_files.append(rule_path)
+                        break
+    
+    if not rule_files:
+        print("Warning: Antigravity rules not found in package (checked Cursor rules locations)")
+        return
+    installed = []
+
+    for rule_file in rule_files:
+        target_path = antigravity_rules_dir / rule_file.name
+
+        if target_path.exists() and not overwrite:
+            continue
+
+        shutil.copy2(rule_file, target_path)
+        installed.append(rule_file.name)
+        print(f"✓ Installed Antigravity rule: {rule_file.name}")
+
+    if installed:
+        print(f"\\n✓ Installed {len(installed)} Antigravity rule file(s) to {antigravity_rules_dir}")
+    else:
+        print("No Antigravity rules to install")
+
+
 def install_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
     """Install configuration files to target directory.
 
@@ -524,6 +604,12 @@ def main() -> None:
         action="store_true",
         help="Install Cursor IDE rules (.cursorrules and .cursor/rules/)",
     )
+    install_parser.add_argument(
+        "--antigravity",
+        action="store_true",
+        help="Install Antigravity rules (.antigravity/rules/)",
+    )
+
 
     # Check compliance command
     check_parser = subparsers.add_parser(
@@ -584,6 +670,12 @@ def main() -> None:
 
         if args.cursor:
             install_cursor_rules(target, overwrite=args.overwrite)
+
+        if args.antigravity:
+            install_antigravity_rules(target, overwrite=args.overwrite)
+
+        if args.antigravity:
+            install_antigravity_rules(target, overwrite=args.overwrite)
 
     elif args.command == "check-compliance":
         check_compliance(

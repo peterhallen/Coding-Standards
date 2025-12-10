@@ -13,7 +13,7 @@ Choose your operating system for step-by-step installation instructions.
 
 ---
 
-## 🌐 Supported Languages
+## Supported Languages
 
 You can install coding standards for:
 
@@ -25,6 +25,11 @@ You can install coding standards for:
 2.  **JavaScript / TypeScript**:
     ```bash
     ai-coding-standards install --lang javascript
+    ```
+
+3.  **Go**:
+    ```bash
+    ai-coding-standards install --lang go
     ```
 
 ---
@@ -258,6 +263,8 @@ The `ai-coding-standards install` command creates these files in your project:
 | `.eslintrc.json` | ESLint configuration |
 | `.prettierrc.json` | Prettier configuration |
 | `tsconfig.json` | TypeScript configuration |
+| **Go Files** | (with `--lang go`) |
+| `.golangci.yml` | golangci-lint configuration |
 
 ### Verify Installation
 
@@ -325,7 +332,7 @@ ai-coding-standards fix-compliance
 | `--pre-commit` | Set up pre-commit hooks |
 | `--cursor` | Install Cursor IDE rules |
 | `--antigravity` | Install Antigravity IDE rules |
-| `--lang` | Specify language: `python` (default), `javascript`, or `auto` |
+| `--lang` | Specify language: `python` (default), `javascript`, `go`, or `auto` |
 
 ---
 

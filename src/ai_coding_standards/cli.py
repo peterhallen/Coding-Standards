@@ -184,6 +184,67 @@ def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: b
         print(f"\\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
 
 
+
+
+def get_go_config_files() -> List[Path]:
+    """Get list of Go configuration files to install."""
+    config_files = [
+        "go/.golangci.yml",
+    ]
+
+    found_files = []
+    for file_path in config_files:
+        path = _get_package_data_path(file_path)
+        if path and path.exists():
+            found_files.append(path)
+
+    return found_files
+
+
+def install_go_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
+    """Install Go configuration files to target directory.
+
+    Args:
+        target_dir: Directory where configs should be installed
+        overwrite: Whether to overwrite existing files
+        interactive: Whether to prompt before overwriting
+    """
+    target_dir = Path(target_dir).resolve()
+
+    if not target_dir.exists():
+        print(f"Error: Target directory does not exist: {target_dir}")
+        sys.exit(1)
+
+    config_files = get_go_config_files()
+    installed = []
+    skipped = []
+
+    for config_file in config_files:
+        # Remove 'go/' prefix for target
+        target_name = config_file.name
+        target_path = target_dir / target_name
+
+        if target_path.exists() and not overwrite:
+            if interactive:
+                response = input(f"{target_name} already exists. Overwrite? [y/N]: ")
+                if response.lower() != "y":
+                    skipped.append(target_name)
+                    continue
+            else:
+                skipped.append(target_name)
+                continue
+
+        shutil.copy2(config_file, target_path)
+        installed.append(target_name)
+        print(f"✓ Installed {target_name}")
+
+    if installed:
+        print(f"\\n✓ Installed {len(installed)} Go configuration file(s)")
+
+    if skipped:
+        print(f"\\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
+
+
 def get_config_files() -> List[Path]:
     """Get list of configuration files to install."""
     config_files = [
@@ -644,6 +705,64 @@ def check_compliance(
         except Exception as e:
             print(f"Warning: Could not run ESLint: {e}")
 
+        except Exception as e:
+            print(f"Warning: Could not run ESLint: {e}")
+
+    # Check for Go files
+    go_files = list(target_dir.rglob("*.go"))
+    if go_files:
+        print(f"Found {len(go_files)} Go file(s)")
+        print()
+
+        # Check gofmt
+        try:
+            print("Checking code formatting (gofmt)...")
+            result = subprocess.run(
+                ["gofmt", "-l", str(target_dir)], capture_output=True, text=True, check=False
+            )
+            # gofmt -l outputs names of files that need formatting
+            if result.stdout.strip():
+                issues.append("Code formatting issues (run: gofmt -w .)")
+                if detailed:
+                    print("Files needing formatting:")
+                    print(result.stdout)
+        except FileNotFoundError:
+            print("Warning: gofmt not found. Is Go installed?")
+
+        # Check golangci-lint or go vet
+        try:
+            # Try golangci-lint first
+            print("Checking code quality (golangci-lint)...")
+            result = subprocess.run(
+                ["golangci-lint", "run"],
+                cwd=target_dir,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode != 0:
+                issues.append("Code quality issues (run: golangci-lint run)")
+                if detailed:
+                    print(result.stdout)
+        except FileNotFoundError:
+            # Fallback to go vet
+            try:
+                print("golangci-lint not found, falling back to 'go vet'...")
+                result = subprocess.run(
+                    ["go", "vet", "./..."],
+                    cwd=target_dir,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                if result.returncode != 0:
+                    issues.append("Code quality issues (run: go vet ./...)")
+                    if detailed:
+                        print(result.stdout)
+                        print(result.stderr)
+            except FileNotFoundError:
+                print("Warning: 'go' command not found. Is Go installed?")
+
     # Summary
     print()
     print("=" * 50)
@@ -725,7 +844,7 @@ def main() -> None:
     )
     install_parser.add_argument(
         "--lang",
-        choices=["python", "javascript", "auto"],
+        choices=["python", "javascript", "go", "auto"],
         default="auto",
         help="Language to install standards for (default: auto-detect)",
     )
@@ -779,20 +898,25 @@ def main() -> None:
         # Determine language
         install_python = False
         install_js = False
+        install_go = False
 
         if args.lang == "python":
             install_python = True
         elif args.lang == "javascript":
             install_js = True
+        elif args.lang == "go":
+            install_go = True
         else:  # auto
             # Simple auto-detection
             if (target / "package.json").exists():
                 install_js = True
+            if (target / "go.mod").exists() or list(target.glob("*.go")):
+                install_go = True
             if (target / "pyproject.toml").exists() or list(target.glob("*.py")):
                 install_python = True
 
             # Default to Python if nothing detected
-            if not install_js and not install_python:
+            if not install_js and not install_python and not install_go:
                 install_python = True
 
         if install_python:
@@ -804,6 +928,13 @@ def main() -> None:
 
         if install_js:
             install_js_configs(
+                target,
+                overwrite=args.overwrite,
+                interactive=not args.no_interactive,
+            )
+
+        if install_go:
+            install_go_configs(
                 target,
                 overwrite=args.overwrite,
                 interactive=not args.no_interactive,

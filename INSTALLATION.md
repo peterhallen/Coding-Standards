@@ -13,7 +13,7 @@ Choose your operating system for step-by-step installation instructions.
 
 ---
 
-## 🌐 Supported Languages
+## Supported Languages
 
 You can install coding standards for:
 

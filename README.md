@@ -14,7 +14,7 @@ A comprehensive set of coding standards and best practices designed for both hum
 - [Contributing](#contributing)
 - [License](#license)
 
-## 🎯 Overview
+## Overview
 
 This repository contains:
 
@@ -24,14 +24,14 @@ This repository contains:
 - **Example Code** - Demonstrations of standards-compliant code
 - **CI/CD Integration** - GitHub Actions workflow for automated validation
 
-## 🌐 Supported Languages
+## Supported Languages
 
 - **Python** (First-class support) - Full suite of caching, linting, formatting, and typing standards.
 - **JavaScript/TypeScript** - Standard configurations for ESLint, Prettier, and TypeScript.
 - **Go** - Standard configurations for golangci-lint and gofmt.
 
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -78,7 +78,7 @@ pytest --cov     # Run tests
 
 See [INSTALLATION.md](INSTALLATION.md) for detailed OS-specific instructions.
 
-## 📚 Documentation
+## Documentation
 
 ### Coding Standards
 
@@ -134,7 +134,7 @@ This document helps developers write better prompts that lead to higher quality 
   - Workflow best practices
   - Troubleshooting inconsistencies
 
-## 🛠️ Tooling Configuration
+## Tooling Configuration
 
 This repository includes pre-configured settings for:
 
@@ -158,7 +158,7 @@ This repository includes pre-configured settings for:
 
 All configurations are aligned with the coding standards defined in `CODING_STANDARDS.md`.
 
-## 📊 Standards Summary
+## Standards Summary
 
 ### Key Metrics
 
@@ -187,7 +187,7 @@ All configurations are aligned with the coding standards defined in `CODING_STAN
 - ✅ Module docstrings for all modules
 - ✅ Class docstrings for all classes
 
-## 💡 Examples
+## Examples
 
 See the [`examples/`](examples/) directory for code examples demonstrating:
 
@@ -197,7 +197,7 @@ See the [`examples/`](examples/) directory for code examples demonstrating:
 - Testing patterns
 - Code organization
 
-## 🛠️ CLI Tool
+## CLI Tool
 
 The package includes a CLI tool for easy installation and compliance checking:
 
@@ -232,7 +232,7 @@ ai-coding-standards install /path/to/project
 
 See [INSTALLATION.md](INSTALLATION.md) for complete CLI documentation.
 
-## 👥 For New Developers
+## For New Developers
 
 **New to the team?** Start here:
 
@@ -240,7 +240,7 @@ See [INSTALLATION.md](INSTALLATION.md) for complete CLI documentation.
 2. **Install Standards**: `ai-coding-standards install --cursor --docs --pre-commit`
 3. **Read Quick Reference**: `CODING_STANDARDS_QUICK_REF.md`
 
-## 🔄 Bringing Code Into Compliance
+## Bringing Code Into Compliance
 
 **Have existing code that needs to meet standards?**
 
@@ -254,7 +254,7 @@ The compliance guide covers:
 - Migration approaches (incremental, file-by-file, etc.)
 - Common scenarios and solutions
 
-## 🤖 Agentic IDE Integration (Cursor)
+## Agentic IDE Integration (Cursor)
 
 The standards are fully integrated with Cursor IDE and other agentic IDEs:
 
@@ -284,7 +284,7 @@ The AI assistant will automatically follow your coding standards when:
 
 See [CURSOR_SETUP.md](CURSOR_SETUP.md) for detailed setup instructions and examples.
 
-## 🛸 Antigravity IDE Integration
+## Antigravity IDE Integration
 
 The standards are also integrated with Antigravity:
 
@@ -300,7 +300,7 @@ This installs:
 
 These rules enable Antigravity to automatically follow your coding standards.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! When contributing:
 
@@ -323,11 +323,11 @@ Contributions are welcome! When contributing:
 3. Commit with descriptive messages
 4. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔗 Additional Resources
+## Additional Resources
 
 - [PEP 8 - Style Guide for Python Code](https://pep8.org/)
 - [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)

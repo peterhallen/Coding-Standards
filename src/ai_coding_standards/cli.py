@@ -184,8 +184,6 @@ def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: b
         print(f"\\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
 
 
-
-
 def get_go_config_files() -> List[Path]:
     """Get list of Go configuration files to install."""
     config_files = [
@@ -276,25 +274,23 @@ def get_js_config_files() -> List[Path]:
     return found_files
 
 
-def get_documentation_files() -> List[Path]:
-    """Get list of documentation files."""
-    doc_files = [
-        "CODING_STANDARDS.md",
-        "CODING_STANDARDS_QUICK_REF.md",
-        "AI_PROMPT_STANDARDS.md",
-        "AI_PROMPT_STANDARDS_QUICK_REF.md",
-        "MARKDOWN_STANDARDS.md",
-        "MARKDOWN_STANDARDS_QUICK_REF.md",
-        "AI_COLLABORATION_GUIDE.md",
+def get_documentation_files() -> List[str]:
+    """Get list of documentation files (relative paths)."""
+    return [
+        "docs/standards/PYTHON_CODING_STANDARDS.md",
+        "docs/standards/PYTHON_CODING_STANDARDS_QUICK_REF.md",
+        "docs/standards/JAVASCRIPT_CODING_STANDARDS.md",
+        "docs/standards/GO_CODING_STANDARDS.md",
+        "docs/guides/AI_PROMPT_STANDARDS.md",
+        "docs/guides/AI_PROMPT_STANDARDS_QUICK_REF.md",
+        "docs/guides/MARKDOWN_STANDARDS.md",
+        "docs/guides/MARKDOWN_STANDARDS_QUICK_REF.md",
+        "docs/guides/AI_COLLABORATION_GUIDE.md",
+        "docs/guides/ONBOARDING.md",
+        "docs/guides/CURSOR_SETUP.md",
+        "docs/guides/VERIFICATION.md",
+        "docs/guides/CODE_COMPLIANCE.md",
     ]
-
-    found_files = []
-    for file_name in doc_files:
-        file_path = _get_package_data_path(file_name)
-        if file_path and file_path.exists():
-            found_files.append(file_path)
-
-    return found_files
 
 
 def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
@@ -514,24 +510,47 @@ def install_docs(target_dir: Path, overwrite: bool = False) -> None:
         overwrite: Whether to overwrite existing files
     """
     target_dir = Path(target_dir).resolve()
-    docs_dir = target_dir / "docs" / "standards"
-    docs_dir.mkdir(parents=True, exist_ok=True)
+    docs_base_dir = target_dir / "docs"
+    
+    # Create subdirectories
+    (docs_base_dir / "standards").mkdir(parents=True, exist_ok=True)
+    (docs_base_dir / "guides").mkdir(parents=True, exist_ok=True)
 
-    doc_files = get_documentation_files()
+    doc_files_rel = get_documentation_files()
     installed = []
 
-    for doc_file in doc_files:
-        target_path = docs_dir / doc_file.name
-
-        if target_path.exists() and not overwrite:
+    for rel_path in doc_files_rel:
+        # Find the source file using the relative path
+        source_path = _get_package_data_path(rel_path)
+        
+        if not source_path or not source_path.exists():
+            print(f"Warning: Could not find documentation file: {rel_path}")
             continue
 
-        shutil.copy2(doc_file, target_path)
-        installed.append(doc_file.name)
-        print(f"✓ Installed {doc_file.name} to {docs_dir}")
+        # Determine target path maintaining structure (standards/ or guides/)
+        # rel_path is like "docs/standards/FILE.md"
+        # We want target to be "target_dir/docs/standards/FILE.md"
+        
+        # Strip "docs/" from the start to get "standards/FILE.md" or "guides/FILE.md"
+        sub_path = Path(rel_path).name
+        if "standards/" in rel_path:
+            target_subdir = "standards"
+        elif "guides/" in rel_path:
+            target_subdir = "guides"
+        else:
+            target_subdir = ""
+            
+        target_file_path = docs_base_dir / target_subdir / sub_path
+
+        if target_file_path.exists() and not overwrite:
+            continue
+
+        shutil.copy2(source_path, target_file_path)
+        installed.append(sub_path)
+        print(f"✓ Installed {sub_path} to docs/{target_subdir}")
 
     if installed:
-        print(f"\n✓ Installed {len(installed)} documentation file(s) to {docs_dir}")
+        print(f"\n✓ Installed {len(installed)} documentation file(s) to {docs_base_dir}")
 
 
 def setup_pre_commit(target_dir: Path) -> None:
@@ -792,8 +811,9 @@ def show_info() -> None:
     for config in get_config_files():
         print(f"  - {config.name}")
     print("\nDocumentation files:")
-    for doc in get_documentation_files():
-        print(f"  - {doc.name}")
+    print("\nDocumentation files:")
+    for doc_rel in get_documentation_files():
+        print(f"  - {doc_rel}")
 
 
 def main() -> None:

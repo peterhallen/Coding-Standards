@@ -1,10 +1,5 @@
 include README.md
 include LICENSE
-include CODING_STANDARDS.md
-include CODING_STANDARDS_QUICK_REF.md
-include AI_PROMPT_STANDARDS.md
-include AI_PROMPT_STANDARDS_QUICK_REF.md
-include INSTALLATION.md
 include .editorconfig
 include .flake8
 include .pylintrc
@@ -12,8 +7,9 @@ include .pre-commit-config.yaml
 include .cursorrules
 include requirements.txt
 include requirements-dev.txt
+recursive-include docs *
 recursive-include .cursor *.mdc
+recursive-include .antigravity *.mdc
 recursive-include examples *.py *.md
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
-

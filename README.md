@@ -19,8 +19,8 @@ A comprehensive set of coding standards and best practices designed for both hum
 
 This repository contains:
 
-- **Comprehensive Coding Standards** (`CODING_STANDARDS.md`) - Detailed guidelines covering all aspects of Python development
-- **Quick Reference Guide** (`CODING_STANDARDS_QUICK_REF.md`) - One-page reference for common standards
+- **Comprehensive Coding Standards** (`docs/standards/PYTHON_CODING_STANDARDS.md`) - Detailed guidelines covering all aspects of Python development
+- **Quick Reference Guide** (`docs/standards/PYTHON_CODING_STANDARDS_QUICK_REF.md`) - One-page reference for common standards
 - **Tooling Configuration** - Pre-configured settings for Black, isort, mypy, pytest, flake8, and pylint
 - **Example Code** - Demonstrations of standards-compliant code
 - **CI/CD Integration** - GitHub Actions workflow for automated validation
@@ -64,7 +64,7 @@ ai-coding-standards install --cursor --docs --pre-commit
 
 - Configuration files: `.editorconfig`, `.flake8`, `.pylintrc`, `pyproject.toml`
 - Cursor IDE rules: `.cursorrules`, `.cursor/rules/`
-- Documentation: `docs/standards/`
+- Documentation: `docs/standards/`, `docs/guides/`
 - Pre-commit hooks
 
 ### Run Code Quality Checks
@@ -81,59 +81,23 @@ See [INSTALLATION.md](INSTALLATION.md) for detailed OS-specific instructions.
 
 ## Documentation
 
-### Coding Standards
+### coding Standards
 
-- **[CODING_STANDARDS.md](CODING_STANDARDS.md)** - Comprehensive coding standards covering:
-  - General principles (DRY, KISS, YAGNI)
-  - Code organization and structure
-  - Function and method guidelines
-  - Naming conventions
-  - Documentation standards
-  - Error handling patterns
-  - Performance best practices
-  - Python-specific standards
-  - Testing standards
-  - AI coder collaboration guidelines
-  - Code review checklist
-
-- **[CODING_STANDARDS_QUICK_REF.md](CODING_STANDARDS_QUICK_REF.md)** - Condensed one-page reference guide
+- **[PYTHON_CODING_STANDARDS.md](docs/standards/PYTHON_CODING_STANDARDS.md)** - Comprehensive Python coding standards
+- **[PYTHON_CODING_STANDARDS_QUICK_REF.md](docs/standards/PYTHON_CODING_STANDARDS_QUICK_REF.md)** - One-page Python reference
+- **[JAVASCRIPT_CODING_STANDARDS.md](docs/standards/JAVASCRIPT_CODING_STANDARDS.md)** - JavaScript/TypeScript standards
+- **[GO_CODING_STANDARDS.md](docs/standards/GO_CODING_STANDARDS.md)** - Go standards
 
 ### AI Prompt Standards
 
-- **[AI_PROMPT_STANDARDS.md](AI_PROMPT_STANDARDS.md)** - Comprehensive guide for writing effective prompts when working with AI coding assistants:
-  - Prompt structure and best practices
-  - Context management
-  - Task specification
-  - Code generation prompts
-  - Code review prompts
-  - Debugging prompts
-  - Documentation prompts
-  - Common patterns and templates
-  - Anti-patterns to avoid
+- **[AI_PROMPT_STANDARDS.md](docs/guides/AI_PROMPT_STANDARDS.md)** - Guide for writing effective prompts
+- **[AI_PROMPT_STANDARDS_QUICK_REF.md](docs/guides/AI_PROMPT_STANDARDS_QUICK_REF.md)** - Quick reference for prompts
 
-This document helps developers write better prompts that lead to higher quality AI-generated code.
+### Docs & Collaboration
 
-### Markdown Documentation Standards
-
-- **[MARKDOWN_STANDARDS.md](MARKDOWN_STANDARDS.md)** - Comprehensive guide for writing consistent Markdown documentation:
-  - Document structure and templates
-  - Heading hierarchy and formatting
-  - Code blocks and syntax highlighting
-  - Tables, lists, and callouts
-  - Link and image guidelines
-  - Emoji usage conventions
-  - Accessibility best practices
-
-- **[MARKDOWN_STANDARDS_QUICK_REF.md](MARKDOWN_STANDARDS_QUICK_REF.md)** - One-page quick reference for documentation standards
-
-### Team Collaboration
-
-- **[AI_COLLABORATION_GUIDE.md](AI_COLLABORATION_GUIDE.md)** - Guide for teams using AI assistants together:
-  - Achieving consistency across multiple developers
-  - Shared rules and prompt templates
-  - Code review practices for AI-generated code
-  - Workflow best practices
-  - Troubleshooting inconsistencies
+- **[MARKDOWN_STANDARDS.md](docs/guides/MARKDOWN_STANDARDS.md)** - Documentation standards
+- **[MARKDOWN_STANDARDS_QUICK_REF.md](docs/guides/MARKDOWN_STANDARDS_QUICK_REF.md)** - Documentation quick ref
+- **[AI_COLLABORATION_GUIDE.md](docs/guides/AI_COLLABORATION_GUIDE.md)** - Team collaboration guide
 
 ## Tooling Configuration
 
@@ -157,7 +121,7 @@ This repository includes pre-configured settings for:
 ### Editor Configuration
 - **EditorConfig** - Consistent coding styles across editors
 
-All configurations are aligned with the coding standards defined in `CODING_STANDARDS.md`.
+All configurations are aligned with the coding standards defined in `docs/standards/PYTHON_CODING_STANDARDS.md`.
 
 ## Standards Summary
 
@@ -237,9 +201,9 @@ See [INSTALLATION.md](INSTALLATION.md) for complete CLI documentation.
 
 **New to the team?** Start here:
 
-1. **Quick Setup** (5 minutes): See [ONBOARDING.md](ONBOARDING.md)
+1. **Quick Setup** (5 minutes): See [ONBOARDING.md](docs/guides/ONBOARDING.md)
 2. **Install Standards**: `ai-coding-standards install --cursor --docs --pre-commit`
-3. **Read Quick Reference**: `CODING_STANDARDS_QUICK_REF.md`
+3. **Read Quick Reference**: `docs/standards/PYTHON_CODING_STANDARDS_QUICK_REF.md`
 
 ## Bringing Code Into Compliance
 
@@ -247,7 +211,7 @@ See [INSTALLATION.md](INSTALLATION.md) for complete CLI documentation.
 
 1. **Check Compliance**: `ai-coding-standards check-compliance`
 2. **Auto-Fix**: `ai-coding-standards fix-compliance`
-3. **Full Guide**: See [CODE_COMPLIANCE.md](CODE_COMPLIANCE.md)
+3. **Full Guide**: See [CODE_COMPLIANCE.md](docs/guides/CODE_COMPLIANCE.md)
 
 The compliance guide covers:
 - Automated fixes (formatting, imports)
@@ -283,7 +247,7 @@ The AI assistant will automatically follow your coding standards when:
 - Suggesting improvements
 - Answering questions about code
 
-See [CURSOR_SETUP.md](CURSOR_SETUP.md) for detailed setup instructions and examples.
+See [CURSOR_SETUP.md](docs/guides/CURSOR_SETUP.md) for detailed setup instructions and examples.
 
 ## Antigravity IDE Integration
 

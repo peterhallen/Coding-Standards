@@ -258,7 +258,8 @@ The `ai-coding-standards install` command creates these files in your project:
 | `.cursorrules` | Cursor IDE rules |
 | `.cursor/rules/*.mdc` | Detailed Cursor rules (with `--cursor`) |
 | `.antigravity/rules/*.mdc` | Detailed Antigravity rules (with `--antigravity`) |
-| `docs/standards/*.md` | Documentation files (with `--docs`) |
+| `docs/standards/*.md` | Coding standards (with `--docs`) |
+| `docs/guides/*.md` | Guides and reference docs (with `--docs`) |
 | **JavaScript Files** | (with `--lang javascript`) |
 | `.eslintrc.json` | ESLint configuration |
 | `.prettierrc.json` | Prettier configuration |
@@ -393,9 +394,9 @@ Install Git first:
 
 ## Next Steps
 
-1. **Read the standards**: [CODING_STANDARDS_QUICK_REF.md](CODING_STANDARDS_QUICK_REF.md)
-2. **Set up your IDE**: [CURSOR_SETUP.md](CURSOR_SETUP.md)
-3. **New to the team?**: [ONBOARDING.md](ONBOARDING.md)
+1. **Read the standards**: [PYTHON_CODING_STANDARDS_QUICK_REF.md](docs/standards/PYTHON_CODING_STANDARDS_QUICK_REF.md)
+2. **Set up your IDE**: [CURSOR_SETUP.md](docs/guides/CURSOR_SETUP.md)
+3. **New to the team?**: [ONBOARDING.md](docs/guides/ONBOARDING.md)
 
 ---
 

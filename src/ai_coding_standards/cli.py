@@ -127,6 +127,50 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     return None
 
 
+def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
+    """Install JS configuration files to target directory.
+
+    Args:
+        target_dir: Directory where configs should be installed
+        overwrite: Whether to overwrite existing files
+        interactive: Whether to prompt before overwriting
+    """
+    target_dir = Path(target_dir).resolve()
+
+    if not target_dir.exists():
+        print(f"Error: Target directory does not exist: {target_dir}")
+        sys.exit(1)
+
+    config_files = get_js_config_files()
+    installed = []
+    skipped = []
+
+    for config_file in config_files:
+        # Remove 'javascript/' prefix for target
+        target_name = config_file.name
+        target_path = target_dir / target_name
+
+        if target_path.exists() and not overwrite:
+            if interactive:
+                response = input(f"{target_name} already exists. Overwrite? [y/N]: ")
+                if response.lower() != "y":
+                    skipped.append(target_name)
+                    continue
+            else:
+                skipped.append(target_name)
+                continue
+
+        shutil.copy2(config_file, target_path)
+        installed.append(target_name)
+        print(f"✓ Installed {target_name}")
+
+    if installed:
+        print(f"\\n✓ Installed {len(installed)} JS configuration file(s)")
+
+    if skipped:
+        print(f"\\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
+
+
 def get_config_files() -> List[Path]:
     """Get list of configuration files to install."""
     config_files = [
@@ -138,26 +182,22 @@ def get_config_files() -> List[Path]:
         ".cursorrules",
     ]
     
-    found_files = []
-    for file_name in config_files:
-        file_path = _get_package_data_path(file_name)
-        if file_path and file_path.exists():
-            found_files.append(file_path)
-        else:
-            # Debug: try to find where the package is installed
-            try:
-                import importlib.util
-                spec = importlib.util.find_spec("ai_coding_standards")
-                if spec and spec.origin:
-                    pkg_dir = Path(spec.origin).parent
-                    # Try data directory
-                    data_file = pkg_dir / "data" / file_name
-                    if data_file.exists():
-                        found_files.append(data_file)
-                        continue
-            except Exception:
-                pass
+    return [ _get_package_data_path(f) for f in config_files if _get_package_data_path(f) ]
+
+def get_js_config_files() -> List[Path]:
+    """Get list of JS configuration files to install."""
+    config_files = [
+        "javascript/.eslintrc.json",
+        "javascript/.prettierrc.json",
+        "javascript/tsconfig.json",
+    ]
     
+    found_files = []
+    for file_path in config_files:
+        path = _get_package_data_path(file_path)
+        if path and path.exists():
+            found_files.append(path)
+            
     return found_files
 
 
@@ -532,6 +572,60 @@ def check_compliance(
         print("Install with: pip install black isort flake8")
         return
 
+
+    # Check for JS/TS files
+    js_files = list(target_dir.rglob("*.js")) + list(target_dir.rglob("*.ts")) + list(target_dir.rglob("*.jsx")) + list(target_dir.rglob("*.tsx"))
+    js_files = [f for f in js_files if "node_modules" not in str(f) and "dist" not in str(f) and "build" not in str(f)]
+
+    if js_files:
+        print(f"Found {len(js_files)} JavaScript/TypeScript file(s)")
+        print()
+        
+        # Check Prettier
+        try:
+            print("Checking code formatting (Prettier)...")
+            # Try running via npx
+            cmd = ["npx", "prettier", "--check", "."]
+            if sys.platform == "win32":
+                cmd = ["npx.cmd", "prettier", "--check", "."]
+                
+            result = subprocess.run(
+                cmd,
+                cwd=target_dir,
+                capture_output=True,
+                text=True,
+                check=False
+            )
+            if result.returncode != 0:
+                issues.append("Code formatting issues (run: npx prettier --write .)")
+                if detailed:
+                    print(result.stdout)
+                    print(result.stderr)
+        except Exception as e:
+            print(f"Warning: Could not run Prettier: {e}")
+
+        # Check ESLint
+        try:
+            print("Checking code quality (ESLint)...")
+            cmd = ["npx", "eslint", "."]
+            if sys.platform == "win32":
+                cmd = ["npx.cmd", "eslint", "."]
+
+            result = subprocess.run(
+                cmd,
+                cwd=target_dir,
+                capture_output=True,
+                text=True,
+                check=False
+            )
+            if result.returncode != 0:
+                issues.append("Code quality issues (run: npx eslint . --fix)")
+                if detailed:
+                    print(result.stdout)
+                    print(result.stderr)
+        except Exception as e:
+            print(f"Warning: Could not run ESLint: {e}")
+
     # Summary
     print()
     print("=" * 50)
@@ -542,7 +636,7 @@ def check_compliance(
         print(f"⚠️  Found {len(issues)} compliance issue(s):")
         for issue in issues:
             print(f"  - {issue}")
-        print("\nRun 'ai-coding-standards fix-compliance' to auto-fix some issues.")
+        print("\nRun 'ai-coding-standards fix-compliance' (or 'npx prettier --write .') to auto-fix some issues.")
 
     if report:
         print(f"\nReport saved to: {report}")
@@ -609,6 +703,12 @@ def main() -> None:
         action="store_true",
         help="Install Antigravity rules (.antigravity/rules/)",
     )
+    install_parser.add_argument(
+        "--lang",
+        choices=["python", "javascript", "auto"],
+        default="auto",
+        help="Language to install standards for (default: auto-detect)",
+    )
 
 
     # Check compliance command
@@ -656,11 +756,39 @@ def main() -> None:
 
     if args.command == "install":
         target = Path(args.target).resolve()
-        install_configs(
-            target,
-            overwrite=args.overwrite,
-            interactive=not args.no_interactive,
-        )
+        
+        # Determine language
+        install_python = False
+        install_js = False
+        
+        if args.lang == "python":
+            install_python = True
+        elif args.lang == "javascript":
+            install_js = True
+        else: # auto
+            # Simple auto-detection
+            if (target / "package.json").exists():
+                install_js = True
+            if (target / "pyproject.toml").exists() or list(target.glob("*.py")):
+                install_python = True
+            
+            # Default to Python if nothing detected
+            if not install_js and not install_python:
+                install_python = True
+
+        if install_python:
+            install_configs(
+                target,
+                overwrite=args.overwrite,
+                interactive=not args.no_interactive,
+            )
+        
+        if install_js:
+            install_js_configs(
+                target,
+                overwrite=args.overwrite,
+                interactive=not args.no_interactive,
+            )
 
         if args.docs:
             install_docs(target, overwrite=args.overwrite)

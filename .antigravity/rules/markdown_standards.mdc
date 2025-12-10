@@ -1,0 +1,140 @@
+---
+description: Markdown documentation style and formatting standards
+globs: ["**/*.md"]
+alwaysApply: true
+priority: high
+---
+
+# Markdown Documentation Standards
+
+[CRITICAL] All Markdown documentation MUST follow these formatting rules:
+
+## Document Structure
+
+- ✅ **One H1 per document** - Document title only
+- ✅ **Table of contents** - Required for documents with 3+ sections
+- ✅ **Sequential heading hierarchy** - Never skip levels (H2 → H4)
+- ✅ **Section separators** - Use `---` between H2 sections only
+- ✅ **Footer** - Include Last Updated date for versioned docs
+
+## Heading Rules
+
+```markdown
+# Document Title (H1 - only one)
+
+## Major Section (H2)
+
+### Subsection (H3)
+
+#### Sub-subsection (H4 - use sparingly)
+```
+
+- ✅ **Sentence case** - Capitalize first word and proper nouns only
+- ✅ **No trailing punctuation** - Except `?` for FAQ headings
+- ✅ **Blank line before and after headings**
+- ❌ **Don't skip levels** - H2 must come before H3
+
+## Text Formatting
+
+| Style | Syntax | Use For |
+|-------|--------|---------|
+| **Bold** | `**text**` | Key terms, warnings, UI elements |
+| *Italic* | `*text*` | Introducing terms, emphasis |
+| `Code` | `` `text` `` | Files, commands, functions, variables |
+
+## Code Blocks
+
+- ✅ **Always specify language** for syntax highlighting
+- ✅ **Use realistic examples** - Avoid `foo`, `bar`, `baz`
+- ✅ **Include comments** for non-obvious code
+
+````markdown
+```python
+def example_function(param: str) -> str:
+    """Brief description of function."""
+    return param.upper()
+```
+````
+
+## Lists
+
+**Unordered lists:**
+```markdown
+- Use dash consistently
+- One space after dash
+  - Indent nested items 2 spaces
+```
+
+**Ordered lists:**
+```markdown
+1. First step
+2. Second step
+   1. Sub-step (indent 3 spaces)
+```
+
+## Links
+
+- ✅ **Descriptive link text** - `[Installation Guide](INSTALLATION.md)`
+- ❌ **Avoid "click here"** - `[click here](...)` is bad practice
+- ✅ **Relative paths** for internal documentation
+
+## Tables
+
+```markdown
+| Left-aligned | Center | Right |
+|:-------------|:------:|------:|
+| Text         | Text   |   123 |
+```
+
+- ✅ **Include headers** - Always describe columns
+- ✅ **Keep simple** - Max 5-6 columns
+- ✅ **Align columns** in source for readability
+
+## Callouts
+
+```markdown
+> **Note**: Additional information.
+
+> ⚠️ **Warning**: Important caution.
+
+> 💡 **Tip**: Helpful suggestion.
+```
+
+## Emoji Usage
+
+| Emoji | Meaning |
+|-------|---------|
+| ✅ | Do this / Correct |
+| ❌ | Don't do this |
+| ⚠️ | Warning |
+| 💡 | Tip |
+| 🚀 | Quick start |
+
+- ✅ **Use in headers and callouts** - For visual scanning
+- ❌ **Never in code blocks** - Keep technical content clean
+- ❌ **Don't overuse** - Enhance, don't overwhelm
+
+## Good/Bad Examples Pattern
+
+When showing correct vs incorrect approaches:
+
+```markdown
+**Good:**
+\`\`\`python
+# Correct approach with explanation
+\`\`\`
+
+**Bad:**
+\`\`\`python
+# Incorrect approach
+\`\`\`
+```
+
+## Images
+
+```markdown
+![Descriptive alt text for accessibility](path/to/image.png)
+```
+
+- ✅ **Always include alt text** - Required for accessibility
+- ✅ **Use descriptive filenames** - `user-flow-diagram.png` not `img1.png`

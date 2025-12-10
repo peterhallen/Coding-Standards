@@ -1,0 +1,82 @@
+---
+description: Documentation requirements - docstrings and type hints
+globs: ["**/*.py"]
+alwaysApply: true
+priority: high
+---
+
+# Documentation Standards
+
+[CRITICAL] All code MUST include proper documentation:
+
+## Docstrings
+
+- ✅ **ALL public functions** require Google-style docstrings
+- ✅ **ALL classes** require docstrings
+- ✅ **ALL modules** require module docstrings
+- ❌ **No obvious comments** - code should be self-documenting
+
+## Docstring Format
+
+Use Google-style docstrings:
+
+```python
+def calculate_total_cost(
+    usage_hours: float,
+    rate_per_hour: float,
+    discount: float = 0.0
+) -> float:
+    """Calculate total cost based on usage and rate.
+    
+    Args:
+        usage_hours: Number of hours used
+        rate_per_hour: Cost per hour
+        discount: Optional discount percentage (0.0 to 1.0). Defaults to 0.0.
+    
+    Returns:
+        Total cost after applying discount
+    
+    Raises:
+        ValueError: If any parameter is negative or discount > 1.0
+    
+    Example:
+        >>> cost = calculate_total_cost(10.0, 5.0, 0.1)
+        >>> assert cost == 45.0
+    """
+    pass
+```
+
+## Type Hints
+
+- ✅ **Type hints required** for ALL function parameters and returns
+- ✅ Use `typing` module for complex types
+- ✅ Use `Optional[T]` instead of `Union[T, None]`
+
+```python
+from typing import List, Dict, Optional, Any
+
+def process_items(
+    items: List[str],
+    config: Optional[Dict] = None
+) -> Dict[str, Any]:
+    """Process items and return results."""
+    pass
+```
+
+## Comments
+
+- ✅ Document **why**, not **what**
+- ✅ Explain complex logic or business rules
+- ❌ Don't comment obvious code
+
+**Good:**
+```python
+# Use binary search because the list is sorted and we need O(log n) performance
+index = bisect.bisect_left(sorted_list, target_value)
+```
+
+**Bad:**
+```python
+# Set x to 5
+x = 5
+```

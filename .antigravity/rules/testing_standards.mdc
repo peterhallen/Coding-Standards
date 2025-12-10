@@ -1,0 +1,92 @@
+---
+description: Testing standards and requirements
+globs: ["**/test_*.py", "**/*_test.py", "**/tests/**/*.py"]
+alwaysApply: true
+priority: high
+---
+
+# Testing Standards
+
+[CRITICAL] All tests MUST follow these standards:
+
+## Test Coverage
+- ✅ **80%+ coverage** target
+- ✅ Focus on critical paths and business logic
+- ✅ Test edge cases and error conditions
+- ✅ Don't test implementation details, test behavior
+
+## Test Structure
+
+Use the Arrange-Act-Assert pattern:
+
+```python
+import pytest
+from unittest.mock import Mock, patch
+
+def test_assess_account_success():
+    """Test successful account assessment."""
+    # Arrange
+    account_id = "123456789012"
+    mock_session = Mock()
+    expected_result = {"status": "success"}
+    
+    # Act
+    result = assess_account(account_id, session=mock_session)
+    
+    # Assert
+    assert result["status"] == "success"
+    assert "account_id" in result
+    mock_session.client.assert_called_once()
+```
+
+## Test Naming
+
+- **Format**: `test_function_scenario_expected_result()`
+- **Descriptive**: Clearly describe what is being tested
+
+**Examples:**
+```python
+def test_calculate_total_cost_with_discount():
+    """Test cost calculation with discount applied."""
+    pass
+
+def test_process_items_empty_list_raises_error():
+    """Test that processing empty list raises ValueError."""
+    pass
+```
+
+## Test Types
+
+- **Unit tests**: Test individual functions/methods in isolation
+- **Integration tests**: Test interactions between components
+- **End-to-end tests**: Test complete workflows
+
+## Mocking
+
+Use mocks for external dependencies:
+
+```python
+from unittest.mock import Mock, patch, MagicMock
+
+@patch('boto3.client')
+def test_fetch_account_data(mock_boto_client):
+    """Test fetching account data with mocked AWS client."""
+    # Arrange
+    mock_sts = Mock()
+    mock_sts.get_caller_identity.return_value = {"Account": "123456789012"}
+    mock_boto_client.return_value = mock_sts
+    
+    # Act
+    result = fetch_account_data("123456789012")
+    
+    # Assert
+    assert result["Account"] == "123456789012"
+    mock_boto_client.assert_called_once_with('sts')
+```
+
+## Test Organization
+
+- Place tests in a `tests/` directory
+- Mirror source structure: `tests/core/test_assessment.py` for `src/core/assessment.py`
+- Use descriptive test names
+- Group related tests in classes

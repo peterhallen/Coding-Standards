@@ -237,6 +237,10 @@ The `ai-coding-standards install` command creates these files in your project:
 | `.cursor/rules/*.mdc` | Detailed Cursor rules (with `--cursor`) |
 | `.antigravity/rules/*.mdc` | Detailed Antigravity rules (with `--antigravity`) |
 | `docs/standards/*.md` | Documentation files (with `--docs`) |
+| **JavaScript Files** | (with `--lang javascript`) |
+| `.eslintrc.json` | ESLint configuration |
+| `.prettierrc.json` | Prettier configuration |
+| `tsconfig.json` | TypeScript configuration |
 
 ### Verify Installation
 
@@ -304,6 +308,7 @@ ai-coding-standards fix-compliance
 | `--pre-commit` | Set up pre-commit hooks |
 | `--cursor` | Install Cursor IDE rules |
 | `--antigravity` | Install Antigravity IDE rules |
+| `--lang` | Specify language: `python` (default), `javascript`, or `auto` |
 
 ---
 

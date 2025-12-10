@@ -45,6 +45,8 @@ pip install git+https://github.com/peterhallen/AI-coding-standards.git
 
 # 3. Install standards in your project
 ai-coding-standards install --cursor --docs --pre-commit
+# OR for JavaScript projects:
+# ai-coding-standards install --lang javascript
 ```
 
 ### What Gets Installed
@@ -201,6 +203,9 @@ ai-coding-standards install --overwrite --docs --pre-commit --cursor
 
 # Install with Antigravity IDE support
 ai-coding-standards install --antigravity
+
+# Install for JavaScript/TypeScript project
+ai-coding-standards install --lang javascript
 
 # Check code compliance
 ai-coding-standards check-compliance

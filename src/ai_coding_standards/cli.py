@@ -184,8 +184,6 @@ def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: b
         print(f"\\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
 
 
-
-
 def get_go_config_files() -> List[Path]:
     """Get list of Go configuration files to install."""
     config_files = [

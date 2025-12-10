@@ -28,6 +28,7 @@ This repository contains:
 
 - **Python** (First-class support) - Full suite of caching, linting, formatting, and typing standards.
 - **JavaScript/TypeScript** - Standard configurations for ESLint, Prettier, and TypeScript.
+- **Go** - Standard configurations for golangci-lint and gofmt.
 
 
 ## 🚀 Quick Start
@@ -54,6 +55,8 @@ pip install git+https://github.com/peterhallen/AI-coding-standards.git
 ai-coding-standards install --cursor --docs --pre-commit
 # OR for JavaScript projects:
 # ai-coding-standards install --lang javascript
+# OR for Go projects:
+# ai-coding-standards install --lang go
 ```
 
 ### What Gets Installed
@@ -213,6 +216,9 @@ ai-coding-standards install --antigravity
 
 # Install for JavaScript/TypeScript project
 ai-coding-standards install --lang javascript
+
+# Install for Go project
+ai-coding-standards install --lang go
 
 # Check code compliance
 ai-coding-standards check-compliance

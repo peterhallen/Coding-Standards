@@ -313,6 +313,12 @@ coding-standards install
 # Install with all options
 coding-standards install --overwrite --docs --pre-commit --cursor
 
+# Install with all options
+coding-standards install --overwrite --docs --pre-commit --cursor
+
+# Install with Antigravity support
+coding-standards install --antigravity
+
 # Install to specific directory
 coding-standards install /path/to/project
 

@@ -15,6 +15,7 @@ A comprehensive set of coding standards and best practices designed for both hum
 
 - [Overview](#overview)
 - [Supported Languages](#supported-languages)
+- [Migration from Old Version](#migration-from-old-version)
 - [Quick Start](#quick-start)
 - [Documentation](#documentation)
 - [Tooling Configuration](#tooling-configuration)
@@ -40,6 +41,26 @@ This repository contains:
 - **Python** (First-class support) - Full suite of caching, linting, formatting, and typing standards.
 - **JavaScript/TypeScript** - Standard configurations for ESLint, Prettier, and TypeScript.
 - **Go** - Standard configurations for golangci-lint and gofmt.
+
+## Migration from Old Version
+
+> [!WARNING]
+> **Project Renamed**: This project has been renamed from `AI-coding-standards` to `coding-standards`.
+
+If you have the previous version installed, you **must** uninstall it before installing the new version to avoid conflicts and ensure CLI commands work result.
+
+**1. Uninstall the old package:**
+```bash
+pip uninstall ai-coding-standards
+```
+
+**2. Install the new package:**
+```bash
+pip install -e .
+```
+
+*Note: The CLI command has changed from `ai-coding-standards` to `coding-standards`.*
+
 
 
 ## Quick Start

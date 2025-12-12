@@ -1161,7 +1161,7 @@ Use this checklist when reviewing code (human or AI-generated):
 - **Raw Data**: HL7 messages, MDS assessments, C-CDA documents.
 
 #### Pre-commit Hook
-We use a local pre-commit hook to detect potential sensitive data before it enters git history.
+We use a local pre-commit hook to detect potential sensitive data before it enters git history. For detailed usage and configuration, see the **[Sensitive Data Hook Guide](../guides/SENSITIVE_DATA_HOOK.md)**.
 
 **To Enable:**
 ```bash

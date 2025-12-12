@@ -99,6 +99,10 @@ See [INSTALLATION.md](INSTALLATION.md) for detailed OS-specific instructions.
 - **[MARKDOWN_STANDARDS_QUICK_REF.md](docs/guides/MARKDOWN_STANDARDS_QUICK_REF.md)** - Documentation quick ref
 - **[AI_COLLABORATION_GUIDE.md](docs/guides/AI_COLLABORATION_GUIDE.md)** - Team collaboration guide
 
+### Sensitive Data Hook
+
+- **[SENSITIVE_DATA_HOOK.md](docs/guides/SENSITIVE_DATA_HOOK.md)** - Sensitive data protection guide
+
 ## Tooling Configuration
 
 This repository includes pre-configured settings for:
@@ -301,5 +305,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Last Updated**: 2025-01-19  
+**Last Updated**: 2025-01-19
 **Version**: 1.0.0

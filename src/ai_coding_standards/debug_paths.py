@@ -1,4 +1,5 @@
 """Debug script to help diagnose package data path issues."""
+
 # pylint: disable=all
 
 from pathlib import Path

@@ -1,4 +1,5 @@
 """Unit tests for the sensitive data checker script."""
+
 import os
 import unittest
 from pathlib import Path

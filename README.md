@@ -1,6 +1,14 @@
 # Coding Standards
 
+[![Security: detect-secrets](https://img.shields.io/badge/Security-detect--secrets-blue)](docs/guides/SECURITY_SCANNING.md)
+[![Compliance: HIPAA/MDS](https://img.shields.io/badge/Compliance-HIPAA%2FMDS-green)](docs/guides/SENSITIVE_DATA_HOOK.md)
+
+
 A comprehensive set of coding standards and best practices designed for both human developers and AI coding assistants. This repository provides guidelines, tooling configuration, and examples to ensure consistency, readability, maintainability, and performance across Python codebases.
+
+> [!TIP]
+> **New Feature**: We've added robust **Security Scanning** to prevent credential leaks! Check out the [Security Scanning Guide](docs/guides/SECURITY_SCANNING.md) to learn about our new `detect-secrets` integration.
+
 
 ## Table of Contents
 
@@ -23,6 +31,7 @@ This repository contains:
 - **Quick Reference Guide** (`docs/standards/PYTHON_CODING_STANDARDS_QUICK_REF.md`) - One-page reference for common standards
 - **Tooling Configuration** - Pre-configured settings for Black, isort, mypy, pytest, flake8, and pylint
 - **Example Code** - Demonstrations of standards-compliant code
+- **Automated Security Scanning** - Blocks credentials (API keys, passwords) and sensitive healthcare data (PHI, MDS) from Git.
 - **CI/CD Integration** - GitHub Actions workflow for automated validation
 
 ## Supported Languages

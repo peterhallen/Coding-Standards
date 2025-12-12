@@ -59,7 +59,7 @@ packages = ["coding_standards"]
 include-package-data = true
 
 [tool.setuptools.package-data]
-ai_coding_standards = [
+coding_standards = [
     "data/**/*",
     "data/.*",
     "data/.cursor/**/*",

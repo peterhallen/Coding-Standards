@@ -5,7 +5,7 @@
 [![Compliance: HIPAA/MDS](https://img.shields.io/badge/Compliance-HIPAA%2FMDS-green)](docs/guides/SENSITIVE_DATA_HOOK.md)
 
 
-A comprehensive set of coding standards and best practices designed for both human developers and AI coding assistants. This repository provides guidelines, tooling configuration, and examples to ensure consistency, readability, maintainability, and performance across Python codebases.
+A comprehensive set of coding standards and best practices designed for both human developers and AI coding assistants. This repository provides guidelines, tooling configuration, and examples to ensure consistency, readability, maintainability, and performance across several codebases. There is currently support for Python, JavaScript/TypeScript, and Go. If you'd like support for a different language, please open an issue.
 
 > [!TIP]
 > **New Feature**: We've added robust **Security Scanning** to prevent credential leaks! Check out the [Security Scanning Guide](docs/guides/SECURITY_SCANNING.md) to learn about our new `detect-secrets` integration.

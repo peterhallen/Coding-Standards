@@ -1,4 +1,4 @@
-# AI Coding Standards - Tool Configuration Template
+# Coding Standards - Tool Configuration Template
 #
 # This file contains pre-configured tool settings aligned with the coding standards.
 # Merge these settings with your existing pyproject.toml, or use this as a starting point.

@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
-    {name = "AI Coding Standards Team"}
+    {name = "Coding Standards Team"}
 ]
 dependencies = [
     "importlib-resources>=5.0.0; python_version<'3.9'",

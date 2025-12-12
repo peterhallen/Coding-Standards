@@ -803,7 +803,7 @@ def check_compliance(
 
 def show_info() -> None:
     """Show information about the coding standards package."""
-    print("AI Coding Standards")
+    print("Coding Standards")
     print("=" * 50)
     print(f"Version: {__import__('coding_standards').__version__}")
     print(f"Package root: {PACKAGE_ROOT}")

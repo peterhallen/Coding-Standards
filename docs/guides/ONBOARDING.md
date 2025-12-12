@@ -1,6 +1,6 @@
 # Developer Onboarding Guide
 
-Welcome! This guide gets you set up with the AI Coding Standards in 5 minutes.
+Welcome! This guide gets you set up with the Coding Standards in 5 minutes.
 
 ## Table of Contents
 

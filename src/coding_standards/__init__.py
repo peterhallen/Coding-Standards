@@ -1,12 +1,12 @@
 """
-AI Coding Standards Package.
+Coding Standards Package.
 
 This package provides coding standards, configuration files, and tools
 for maintaining code quality across Python projects.
 """
 
 __version__ = "1.0.0"
-__author__ = "AI Coding Standards Team"
+__author__ = "Coding Standards Team"
 
 from pathlib import Path
 

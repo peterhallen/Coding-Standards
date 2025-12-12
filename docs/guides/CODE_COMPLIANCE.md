@@ -1,6 +1,6 @@
 # Code Compliance Guide
 
-This guide helps you bring existing code (legacy code, imported code, or new codebases) into compliance with the AI Coding Standards.
+This guide helps you bring existing code (legacy code, imported code, or new codebases) into compliance with the Coding Standards.
 
 ## Table of Contents
 

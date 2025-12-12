@@ -1,4 +1,4 @@
-# AI Coding Standards
+# Coding Standards
 
 A comprehensive set of coding standards and best practices designed for both human developers and AI coding assistants. This repository provides guidelines, tooling configuration, and examples to ensure consistency, readability, maintainability, and performance across Python codebases.
 

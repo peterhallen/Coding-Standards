@@ -1,6 +1,6 @@
 # Data Science Onboarding: Protecting Sensitive Data
 
-Welcome to the AI Coding Standards project! This module is designed to help you commit code safely by automatically detecting sensitive data (PII/PHI) before it enters the repository.
+Welcome to the Coding Standards project! This module is designed to help you commit code safely by automatically detecting sensitive data (PII/PHI) before it enters the repository.
 
 ## The Object Lesson: A "Live" Demo
 

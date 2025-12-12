@@ -45,6 +45,31 @@ coding-standards install --pre-commit
 pre-commit install
 ```
 
+### 1a. Adding to an Existing Repository (CRITICAL)
+If you are adding this to a repo that already has code:
+
+1.  **Do NOT** just install the hook yet (it may block your implementation if you have legacy secrets).
+2.  **Generate the Baseline** first:
+    ```bash
+    detect-secrets scan > .secrets.baseline
+    ```
+3.  **Audit the Baseline**:
+    ```bash
+    detect-secrets audit .secrets.baseline
+    ```
+    Mark true false positives with `y`.
+    Mark actual secrets with `n` (and plan to rotate/remove them).
+4.  **Commit the Baseline**:
+    ```bash
+    git add .secrets.baseline
+    git commit -m "Security: Add secrets baseline"
+    ```
+5.  **NOW Install the Hook**:
+    ```bash
+    pre-commit install
+    ```
+    Future commits will now check against this baseline.
+
 ### 2. Manual Scanning
 You can scan all files at any time:
 ```bash

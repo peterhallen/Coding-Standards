@@ -21,4 +21,3 @@ coverage>=7.2.0
 # Optional: Additional tools
 # ruff>=0.1.0  # Fast Python linter (alternative to flake8)
 # bandit>=1.7.0  # Security linter
-

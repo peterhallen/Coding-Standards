@@ -269,6 +269,17 @@ The `coding-standards install` command creates these files in your project:
 
 ### Verify Installation
 
+### Enable Pre-commit Hooks
+
+After installing development tools, enable git hooks:
+
+```bash
+pre-commit install
+```
+
+This ensures checks run automatically on every `git commit`.
+
+
 **Windows (PowerShell):**
 
 ```powershell

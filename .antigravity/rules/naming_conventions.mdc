@@ -74,7 +74,7 @@ class SecurityAssessment:
     def __init__(self):
         self._internal_cache = {}
         self._config = self._load_config()
-    
+
     def _load_config(self) -> Dict:
         """Private method - internal implementation detail."""
         pass

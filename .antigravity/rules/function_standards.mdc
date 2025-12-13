@@ -40,11 +40,11 @@ def process_data(data: List[Dict]) -> List[Dict]:
     """Process data with validation."""
     if not data:
         return []
-    
+
     validated = _validate_data(data)
     if not validated:
         return []
-    
+
     return _transform_data(validated)
 ```
 

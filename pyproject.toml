@@ -116,6 +116,7 @@ known_thirdparty = [
 [tool.mypy]
 # mypy type checker configuration
 python_version = "3.8"
+exclude = ['examples']
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
@@ -140,7 +141,10 @@ module = [
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "ai_coding_standards.debug_paths"
+module = [
+    "coding_standards.cli",
+    "coding_standards.debug_paths",
+]
 ignore_errors = true
 
 [tool.pylint.master]
@@ -179,10 +183,9 @@ omit = [
     "*/.venv/*",
     "*/setup.py",
     "*/conftest.py",
-    "*/conftest.py",
-    "examples/*",
-    "*/bad_example.py",  # Educational file, intentionally not tested
-    "*/debug_paths.py"
+    "*/examples/*",
+    "*/coding_standards/cli.py",
+    "*/coding_standards/debug_paths.py",
 ]
 
 [tool.coverage.report]

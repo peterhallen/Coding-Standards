@@ -593,6 +593,5 @@ Follow the coding standards in CODING_STANDARDS.md:
 
 ---
 
-**Last Updated**: 2025-01-19  
+**Last Updated**: 2025-01-19
 **Version**: 1.0.0
-

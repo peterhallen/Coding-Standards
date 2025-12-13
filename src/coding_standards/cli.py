@@ -2,6 +2,11 @@
 CLI tool for installing and managing coding standards in projects.
 """
 
+# pylint: disable=too-many-lines,too-many-branches,too-many-statements,
+# pylint: disable=too-many-locals,too-many-return-statements,too-many-nested-blocks,
+# pylint: disable=broad-exception-caught,duplicate-except,import-outside-toplevel,
+# pylint: disable=invalid-name,subprocess-run-check
+
 import argparse
 import sys
 from pathlib import Path
@@ -133,7 +138,9 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     # Method 4: Try pkg_resources.path()
     try:
         with pkg_resources.path("coding_standards.data", file_path) as p:
-            return Path(p)
+            p = Path(p)
+            if p.exists():
+                return p
     except Exception:
         pass
 

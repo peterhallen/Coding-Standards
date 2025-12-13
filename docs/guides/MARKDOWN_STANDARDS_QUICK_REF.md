@@ -23,7 +23,7 @@ Brief description.
 
 ---
 
-**Last Updated**: YYYY-MM-DD  
+**Last Updated**: YYYY-MM-DD
 **Version**: X.Y.Z
 ```
 
@@ -177,4 +177,3 @@ Use in section headers and callouts only. Never in code.
 ---
 
 **Full Documentation**: See `MARKDOWN_STANDARDS.md`
-

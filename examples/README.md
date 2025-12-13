@@ -67,4 +67,3 @@ mypy examples/
 2. **Run the linters**: See how the bad example fails linting checks
 3. **Study the tests**: Understand how to write comprehensive tests
 4. **Apply to your code**: Use the good example as a template for your own code
-

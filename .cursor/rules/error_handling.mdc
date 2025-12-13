@@ -34,7 +34,7 @@ def fetch_account_data(account_id: str) -> Dict:
     """Fetch account data from AWS."""
     if not account_id or not account_id.isdigit():
         raise ValueError(f"Invalid account ID: {account_id}")
-    
+
     try:
         sts_client = boto3.client('sts')
         response = sts_client.get_caller_identity()

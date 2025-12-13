@@ -110,4 +110,3 @@ Fix with proper error handling per CODING_STANDARDS.md
 ---
 
 **Full Documentation**: See `AI_PROMPT_STANDARDS.md`
-

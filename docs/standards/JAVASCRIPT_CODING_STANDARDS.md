@@ -56,7 +56,7 @@ Use modern syntax features that improve readability and safety.
     // Good
     const add = (a: number, b: number) => a + b;
     items.map(item => item.id);
-    
+
     // Bad
     var that = this; // Avoid 'this' aliasing, use arrows
     ```
@@ -254,10 +254,10 @@ import { Counter } from './Counter';
 
 test('increments count when button is clicked', () => {
   render(<Counter />);
-  
+
   const button = screen.getByText(/increment/i);
   fireEvent.click(button);
-  
+
   expect(screen.getByText(/count: 1/i)).toBeInTheDocument();
 });
 ```

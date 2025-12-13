@@ -87,7 +87,7 @@ Content here...
 
 ---
 
-**Last Updated**: YYYY-MM-DD  
+**Last Updated**: YYYY-MM-DD
 **Version**: X.Y.Z
 ```
 
@@ -390,11 +390,11 @@ Use these language identifiers:
 ```python
 def calculate_discount(price: float, percentage: float) -> float:
     """Calculate discounted price.
-    
+
     Args:
         price: Original price
         percentage: Discount percentage (0-100)
-    
+
     Returns:
         Price after discount
     """
@@ -889,6 +889,5 @@ Screen readers use headings for navigation. Ensure:
 
 ---
 
-**Last Updated**: 2025-12-08  
+**Last Updated**: 2025-12-08
 **Version**: 1.0.0
-

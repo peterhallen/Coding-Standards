@@ -5,6 +5,18 @@
 from pathlib import Path
 
 
+def get_repo_root():
+    current = Path(__file__).resolve()
+    for parent in [current] + list(current.parents):
+        if (parent / ".git").exists():
+            return parent
+    return None
+
+
+def is_running_from_repo():
+    return get_repo_root() is not None
+
+
 def main() -> None:
     """Main debug function."""
     print("=" * 60)

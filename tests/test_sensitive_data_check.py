@@ -1,5 +1,6 @@
 """Unit tests for the sensitive data checker script."""
 
+# pylint: disable=missing-function-docstring,invalid-name
 import os
 import unittest
 from pathlib import Path
@@ -100,6 +101,11 @@ class TestSensitiveDataCheck(unittest.TestCase):
             with self.assertRaises(SystemExit) as context:
                 main()
             self.assertEqual(context.exception.code, 1)
+
+    def test_skip_non_sensitive_extension(self):
+        self.assertFalse(
+            check_file(self.create_file("just text")), "Non-sensitive file should not be skipped"
+        )
 
 
 if __name__ == "__main__":

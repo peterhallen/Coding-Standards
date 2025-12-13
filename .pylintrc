@@ -27,7 +27,7 @@ disable=
     too-many-boolean-expressions,
     too-many-public-methods,
     too-many-nested-blocks,
-    too-complex,
+
     import-error,
     no-member,
     fixme,
@@ -46,7 +46,7 @@ enable=
     too-many-boolean-expressions,
     too-many-public-methods,
     too-many-nested-blocks,
-    too-complex
+
 
 [FORMAT]
 # Maximum number of characters on a single line
@@ -163,4 +163,4 @@ preferred-modules=
 
 [EXCEPTIONS]
 # Exceptions that will emit a warning when being caught
-overgeneral-exceptions=BaseException,Exception
+overgeneral-exceptions=builtins.BaseException,builtins.Exception

@@ -182,6 +182,7 @@ omit = [
     "*/venv/*",
     "*/.venv/*",
     "*/setup.py",
+    "*/setup_msi.py",
     "*/conftest.py",
     "*/examples/*",
     "*/coding_standards/cli.py",

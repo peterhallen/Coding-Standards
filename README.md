@@ -15,6 +15,7 @@ A comprehensive set of coding standards and best practices designed for both hum
 
 - [Overview](#overview)
 - [Supported Languages](#supported-languages)
+- [Supported AI Platforms](#supported-ai-platforms)
 - [Migration from Old Version](#migration-from-old-version)
 - [Quick Start](#quick-start)
 - [Documentation](#documentation)
@@ -22,6 +23,7 @@ A comprehensive set of coding standards and best practices designed for both hum
 - [Standards Summary](#standards-summary)
 - [Examples](#examples)
 - [CLI Tool](#cli-tool)
+- [AI Platform Integration](#ai-platform-integration)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -41,6 +43,16 @@ This repository contains:
 - **Python** (First-class support) - Full suite of caching, linting, formatting, and typing standards.
 - **JavaScript/TypeScript** - Standard configurations for ESLint, Prettier, and TypeScript.
 - **Go** - Standard configurations for golangci-lint and gofmt.
+
+## Supported AI Platforms
+
+| Platform | Directory/File | CLI Flag |
+|----------|----------------|----------|
+| **Cursor IDE** | `.cursor/rules/`, `.cursorrules` | `--cursor` |
+| **Antigravity** | `.antigravity/rules/` | `--antigravity` |
+| **Agent OS** | `agent-os/standards/` | `--agent-os` |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | `--copilot` |
+| **ChatGPT** | `.chatgpt/instructions.md` | `--chatgpt` |
 
 ## Migration from Old Version
 
@@ -95,7 +107,12 @@ coding-standards install --cursor --docs --pre-commit
 ### What Gets Installed
 
 - Configuration files: `.editorconfig`, `.flake8`, `.pylintrc`, `pyproject.toml`
-- Cursor IDE rules: `.cursorrules`, `.cursor/rules/`
+- AI platform rules (based on flags):
+  - Cursor IDE: `.cursorrules`, `.cursor/rules/`
+  - Antigravity: `.antigravity/rules/`
+  - Agent OS: `agent-os/standards/`
+  - GitHub Copilot: `.github/copilot-instructions.md`
+  - ChatGPT: `.chatgpt/instructions.md`
 - Documentation: `docs/standards/`, `docs/guides/`
 - Pre-commit hooks
 
@@ -209,11 +226,18 @@ coding-standards info
 # Install standards in current directory
 coding-standards install
 
-# Install with options (including Cursor IDE support)
-coding-standards install --overwrite --docs --pre-commit --cursor
+# Install with AI platform support
+coding-standards install --cursor          # Cursor IDE
+coding-standards install --antigravity     # Antigravity
+coding-standards install --agent-os        # Agent OS
+coding-standards install --copilot         # GitHub Copilot
+coding-standards install --chatgpt         # ChatGPT
 
-# Install with Antigravity IDE support
-coding-standards install --antigravity
+# Install multiple platforms at once
+coding-standards install --cursor --copilot --chatgpt
+
+# Install with all options
+coding-standards install --overwrite --docs --pre-commit --cursor
 
 # Install for JavaScript/TypeScript project
 coding-standards install --lang javascript
@@ -255,51 +279,60 @@ The compliance guide covers:
 - Migration approaches (incremental, file-by-file, etc.)
 - Common scenarios and solutions
 
-## Agentic IDE Integration (Cursor)
+## AI Platform Integration
 
-The standards are fully integrated with Cursor IDE and other agentic IDEs:
+The standards are fully integrated with multiple AI coding assistants:
 
-### Quick Setup
+### Cursor IDE
 
 ```bash
-# Install with Cursor support
 coding-standards install --cursor
 ```
 
-This installs:
-- `.cursorrules` - Main rules file that Cursor reads automatically
-- `.cursor/rules/` - Granular rule files for specific standards
+Installs `.cursorrules` and `.cursor/rules/` - Cursor automatically reads these and applies standards to all AI-generated code. See [CURSOR_SETUP.md](docs/guides/CURSOR_SETUP.md) for details.
 
-### How It Works
-
-When you open your project in Cursor, it automatically:
-- Reads `.cursorrules` from the project root
-- Loads rules from `.cursor/rules/` directory
-- Applies these standards to all AI-generated code
-
-The AI assistant will automatically follow your coding standards when:
-- Generating new code
-- Refactoring existing code
-- Suggesting improvements
-- Answering questions about code
-
-See [CURSOR_SETUP.md](docs/guides/CURSOR_SETUP.md) for detailed setup instructions and examples.
-
-## Antigravity IDE Integration
-
-The standards are also integrated with Antigravity:
-
-### Quick Setup
+### Antigravity
 
 ```bash
-# Install with Antigravity support
 coding-standards install --antigravity
 ```
 
-This installs:
-- `.antigravity/rules/` - Granular rule files for specific standards
+Installs `.antigravity/rules/` with granular rule files for specific standards.
 
-These rules enable Antigravity to automatically follow your coding standards.
+### Agent OS
+
+```bash
+coding-standards install --agent-os
+```
+
+Installs `agent-os/standards/` directory with:
+- Markdown standards files (function, documentation, naming, testing, error handling, code organization)
+- `index.yml` for standard matching by file patterns
+
+Works with any AI tool via the [Agent OS](https://buildermethods.com/agent-os) framework.
+
+### GitHub Copilot
+
+```bash
+coding-standards install --copilot
+```
+
+Installs `.github/copilot-instructions.md` - GitHub Copilot automatically reads this file and uses it to guide code suggestions in your repository.
+
+### ChatGPT
+
+```bash
+coding-standards install --chatgpt
+```
+
+Installs `.chatgpt/instructions.md` - A formatted instructions file you can copy into ChatGPT's Custom Instructions to ensure consistent code quality in conversations.
+
+### Install Multiple Platforms
+
+```bash
+# Install all AI platforms at once
+coding-standards install --cursor --antigravity --agent-os --copilot --chatgpt
+```
 
 ## Contributing
 
@@ -337,5 +370,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Last Updated**: 2025-01-19
-**Version**: 1.0.0
+**Last Updated**: 2026-02-03
+**Version**: 1.1.0

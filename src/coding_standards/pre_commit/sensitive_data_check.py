@@ -3,6 +3,7 @@
 Sensitive Data Checker for Pre-commit Hook
 Detects HL7 data, MDS assessments, and PII/PHI markers.
 """
+
 import sys
 from pathlib import Path
 from typing import List, Pattern

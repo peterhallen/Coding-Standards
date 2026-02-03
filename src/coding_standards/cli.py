@@ -397,6 +397,119 @@ def install_antigravity_rules(target_dir: Path, overwrite: bool = False) -> None
     _install_ide_rules(target_dir, "antigravity", overwrite)
 
 
+def _get_agent_os_files() -> List[Path]:
+    """Find Agent OS standards files.
+
+    Returns:
+        List of paths to Agent OS standards files
+    """
+    standards_files = [
+        "agent-os/standards/function_standards.md",
+        "agent-os/standards/documentation_standards.md",
+        "agent-os/standards/naming_conventions.md",
+        "agent-os/standards/testing_standards.md",
+        "agent-os/standards/error_handling.md",
+        "agent-os/standards/code_organization.md",
+        "agent-os/standards/index.yml",
+    ]
+
+    found_files = []
+    for file_path in standards_files:
+        path = _get_package_data_path(file_path)
+        if path and path.exists():
+            found_files.append(path)
+
+    return found_files
+
+
+def install_agent_os_rules(target_dir: Path, overwrite: bool = False) -> None:
+    """Install Agent OS standards to target directory.
+
+    Args:
+        target_dir: Directory where standards should be installed
+        overwrite: Whether to overwrite existing files
+    """
+    target_dir = Path(target_dir).resolve()
+    standards_dir = target_dir / "agent-os" / "standards"
+    standards_dir.mkdir(parents=True, exist_ok=True)
+
+    standards_files = _get_agent_os_files()
+
+    if not standards_files:
+        print("Warning: Agent OS standards not found in package")
+        return
+
+    installed = []
+    for standards_file in standards_files:
+        target_path = standards_dir / standards_file.name
+
+        if target_path.exists() and not overwrite:
+            continue
+
+        shutil.copy2(standards_file, target_path)
+        installed.append(standards_file.name)
+        print(f"✓ Installed Agent OS standard: {standards_file.name}")
+
+    if installed:
+        print(f"\n✓ Installed {len(installed)} Agent OS file(s) to {standards_dir}")
+    else:
+        print("No Agent OS standards to install")
+
+
+def install_chatgpt_rules(target_dir: Path, overwrite: bool = False) -> None:
+    """Install ChatGPT instructions to target directory.
+
+    Args:
+        target_dir: Directory where instructions should be installed
+        overwrite: Whether to overwrite existing files
+    """
+    target_dir = Path(target_dir).resolve()
+    chatgpt_dir = target_dir / ".chatgpt"
+    chatgpt_dir.mkdir(parents=True, exist_ok=True)
+
+    source_path = _get_package_data_path(".chatgpt/instructions.md")
+
+    if not source_path or not source_path.exists():
+        print("Warning: ChatGPT instructions not found in package")
+        return
+
+    target_path = chatgpt_dir / "instructions.md"
+
+    if target_path.exists() and not overwrite:
+        print("ChatGPT instructions already exist (use --overwrite to replace)")
+        return
+
+    shutil.copy2(source_path, target_path)
+    print(f"✓ Installed ChatGPT instructions to {target_path}")
+
+
+def install_copilot_rules(target_dir: Path, overwrite: bool = False) -> None:
+    """Install GitHub Copilot instructions to target directory.
+
+    Args:
+        target_dir: Directory where instructions should be installed
+        overwrite: Whether to overwrite existing files
+    """
+    target_dir = Path(target_dir).resolve()
+    github_dir = target_dir / ".github"
+    github_dir.mkdir(parents=True, exist_ok=True)
+
+    source_path = _get_package_data_path(".github/copilot-instructions.md")
+
+    if not source_path or not source_path.exists():
+        print("Warning: Copilot instructions not found in package")
+        return
+
+    target_path = github_dir / "copilot-instructions.md"
+
+    if target_path.exists() and not overwrite:
+        print("Copilot instructions already exist (use --overwrite to replace)")
+        return
+
+    shutil.copy2(source_path, target_path)
+    print(f"✓ Installed GitHub Copilot instructions to {target_path}")
+
+
 def install_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
     """Install Python configuration files to target directory.
 
@@ -765,6 +878,21 @@ def main() -> None:
         help="Install Antigravity rules (.antigravity/rules/)",
     )
     install_parser.add_argument(
+        "--agent-os",
+        action="store_true",
+        help="Install Agent OS standards (agent-os/standards/)",
+    )
+    install_parser.add_argument(
+        "--chatgpt",
+        action="store_true",
+        help="Install ChatGPT instructions (.chatgpt/instructions.md)",
+    )
+    install_parser.add_argument(
+        "--copilot",
+        action="store_true",
+        help="Install GitHub Copilot instructions (.github/copilot-instructions.md)",
+    )
+    install_parser.add_argument(
         "--lang",
         choices=["python", "javascript", "go", "auto"],
         default="auto",
@@ -873,6 +1001,15 @@ def main() -> None:
 
         if args.antigravity:
             install_antigravity_rules(target, overwrite=args.overwrite)
+
+        if args.agent_os:
+            install_agent_os_rules(target, overwrite=args.overwrite)
+
+        if args.chatgpt:
+            install_chatgpt_rules(target, overwrite=args.overwrite)
+
+        if args.copilot:
+            install_copilot_rules(target, overwrite=args.overwrite)
 
     elif args.command == "check-compliance":
         check_compliance(

@@ -1,0 +1,45 @@
+# Agent OS Standards Index
+# This file maps file patterns to relevant coding standards
+
+standards:
+  - name: function_standards
+    file: function_standards.md
+    patterns:
+      - "**/*.py"
+      - "**/*.js"
+      - "**/*.ts"
+    description: Function length, complexity, and parameter guidelines
+
+  - name: documentation_standards
+    file: documentation_standards.md
+    patterns:
+      - "**/*.py"
+    description: Docstrings, type hints, and comments
+
+  - name: naming_conventions
+    file: naming_conventions.md
+    patterns:
+      - "**/*.py"
+      - "**/*.js"
+      - "**/*.ts"
+    description: Variable, function, class, and file naming
+
+  - name: testing_standards
+    file: testing_standards.md
+    patterns:
+      - "**/test_*.py"
+      - "**/*_test.py"
+      - "**/tests/**/*.py"
+    description: Test coverage, structure, and mocking
+
+  - name: error_handling
+    file: error_handling.md
+    patterns:
+      - "**/*.py"
+    description: Exception handling and logging
+
+  - name: code_organization
+    file: code_organization.md
+    patterns:
+      - "**/*.py"
+    description: Module structure and imports

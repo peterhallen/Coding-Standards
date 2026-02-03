@@ -8,11 +8,19 @@
 A comprehensive set of coding standards and best practices designed for both human developers and AI coding assistants. This repository provides guidelines, tooling configuration, and examples to ensure consistency, readability, maintainability, and performance across several codebases. There is currently support for Python, JavaScript/TypeScript, and Go. If you'd like support for a different language, please open an issue.
 
 > [!TIP]
-> **New Feature**: We've added robust **Security Scanning** to prevent credential leaks! Check out the [Security Scanning Guide](docs/guides/SECURITY_SCANNING.md) to learn about our new `detect-secrets` integration.
+> **New in v1.1.0**: Now supports **5 AI platforms** - Cursor, Antigravity, Agent OS, GitHub Copilot, and ChatGPT! Install rules for any platform with a single command. See [AI Platform Integration](#ai-platform-integration).
 
+## What's New in v1.1.0
+
+- **Multi-AI Platform Support** - Install coding standards for Cursor, Antigravity, Agent OS, GitHub Copilot, and ChatGPT
+- **GitHub Copilot Integration** - Native `.github/copilot-instructions.md` support
+- **ChatGPT Custom Instructions** - Ready-to-use instructions file for ChatGPT
+- **Agent OS Standards** - Full standards suite with `index.yml` for pattern matching
+- **Security Scanning** - Blocks credentials and sensitive healthcare data (PHI, MDS) from Git via `detect-secrets`
 
 ## Table of Contents
 
+- [What's New in v1.1.0](#whats-new-in-v110)
 - [Overview](#overview)
 - [Supported Languages](#supported-languages)
 - [Supported AI Platforms](#supported-ai-platforms)

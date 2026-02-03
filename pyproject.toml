@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "coding-standards"
-version = "1.0.0"
+version = "1.1.0"
 description = "Comprehensive coding standards and best practices for Python development with AI assistants"
 readme = "README.md"
 requires-python = ">=3.8"

@@ -731,9 +731,6 @@ def check_compliance(
         except Exception as e:
             print(f"Warning: Could not run ESLint: {e}")
 
-        except Exception as e:
-            print(f"Warning: Could not run ESLint: {e}")
-
     # Check for Go files
     go_files = list(target_dir.rglob("*.go"))
     if go_files:
@@ -817,7 +814,6 @@ def show_info() -> None:
     print("\nConfiguration files:")
     for config in get_config_files():
         print(f"  - {config.name}")
-    print("\nDocumentation files:")
     print("\nDocumentation files:")
     for doc_rel in get_documentation_files():
         print(f"  - {doc_rel}")
@@ -979,9 +975,6 @@ def main() -> None:
         if args.antigravity:
             install_antigravity_rules(target, overwrite=args.overwrite)
 
-        if args.antigravity:
-            install_antigravity_rules(target, overwrite=args.overwrite)
-
     elif args.command == "check-compliance":
         check_compliance(
             Path(args.target),
@@ -1029,7 +1022,7 @@ def main() -> None:
         show_info()
 
     elif args.command == "debug-paths":
-        from ai_coding_standards.debug_paths import main as debug_main
+        from coding_standards.debug_paths import main as debug_main
 
         debug_main()
 

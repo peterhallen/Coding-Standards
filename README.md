@@ -85,14 +85,27 @@ pip install -e .
 
 ## Quick Start
 
-### Prerequisites
+### Windows Installer (Recommended for Windows)
+
+Download and run the standalone MSI installer - no Python installation required:
+
+**[Download coding-standards-1.1.0-win64.msi](https://github.com/peterhallen/Coding-Standards/releases/download/v1.1.0/coding-standards-1.1.0-win64.msi)** (8.7 MB)
+
+After installation, open a new terminal and run:
+```bash
+coding-standards install --cursor --copilot --docs
+```
+
+### pip Install (All Platforms)
+
+#### Prerequisites
 
 - Python 3.8+ (3.11 or 3.12 recommended)
 - Git
 
 > **First time?** See [INSTALLATION.md](INSTALLATION.md) for OS-specific setup (Windows, macOS, Linux).
 
-### Install in 3 Steps
+#### Install in 3 Steps
 
 ```bash
 # 1. Create & activate virtual environment
@@ -109,7 +122,6 @@ coding-standards install --cursor --docs --pre-commit
 # coding-standards install --lang javascript
 # OR for Go projects:
 # coding-standards install --lang go
-
 ```
 
 ### What Gets Installed

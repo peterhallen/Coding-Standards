@@ -147,11 +147,19 @@ def _get_package_data_path(file_path: str) -> Optional[Path]:
     return None
 
 
-def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
-    """Install JS configuration files to target directory.
+def _install_config_files(
+    target_dir: Path,
+    config_files: List[Path],
+    label: str,
+    overwrite: bool = False,
+    interactive: bool = True,
+) -> None:
+    """Generic helper to install configuration files.
 
     Args:
         target_dir: Directory where configs should be installed
+        config_files: List of source file paths to install
+        label: Label for the file type (e.g., "JS", "Go", "Python")
         overwrite: Whether to overwrite existing files
         interactive: Whether to prompt before overwriting
     """
@@ -161,12 +169,10 @@ def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: b
         print(f"Error: Target directory does not exist: {target_dir}")
         sys.exit(1)
 
-    config_files = get_js_config_files()
     installed = []
     skipped = []
 
     for config_file in config_files:
-        # Remove 'javascript/' prefix for target
         target_name = config_file.name
         target_path = target_dir / target_name
 
@@ -185,10 +191,24 @@ def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: b
         print(f"✓ Installed {target_name}")
 
     if installed:
-        print(f"\\n✓ Installed {len(installed)} JS configuration file(s)")
+        print(f"\n✓ Installed {len(installed)} {label} configuration file(s)")
 
     if skipped:
-        print(f"\\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
+        print(f"\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
+
+    if not installed and not skipped:
+        print(f"No {label} configuration files to install")
+
+
+def install_js_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
+    """Install JS configuration files to target directory.
+
+    Args:
+        target_dir: Directory where configs should be installed
+        overwrite: Whether to overwrite existing files
+        interactive: Whether to prompt before overwriting
+    """
+    _install_config_files(target_dir, get_js_config_files(), "JS", overwrite, interactive)
 
 
 def get_go_config_files() -> List[Path]:
@@ -214,40 +234,7 @@ def install_go_configs(target_dir: Path, overwrite: bool = False, interactive: b
         overwrite: Whether to overwrite existing files
         interactive: Whether to prompt before overwriting
     """
-    target_dir = Path(target_dir).resolve()
-
-    if not target_dir.exists():
-        print(f"Error: Target directory does not exist: {target_dir}")
-        sys.exit(1)
-
-    config_files = get_go_config_files()
-    installed = []
-    skipped = []
-
-    for config_file in config_files:
-        # Remove 'go/' prefix for target
-        target_name = config_file.name
-        target_path = target_dir / target_name
-
-        if target_path.exists() and not overwrite:
-            if interactive:
-                response = input(f"{target_name} already exists. Overwrite? [y/N]: ")
-                if response.lower() != "y":
-                    skipped.append(target_name)
-                    continue
-            else:
-                skipped.append(target_name)
-                continue
-
-        shutil.copy2(config_file, target_path)
-        installed.append(target_name)
-        print(f"✓ Installed {target_name}")
-
-    if installed:
-        print(f"\\n✓ Installed {len(installed)} Go configuration file(s)")
-
-    if skipped:
-        print(f"\\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
+    _install_config_files(target_dir, get_go_config_files(), "Go", overwrite, interactive)
 
 
 def get_config_files() -> List[Path]:
@@ -300,18 +287,12 @@ def get_documentation_files() -> List[str]:
     ]
 
 
-def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
-    """Install Cursor IDE rules to target directory.
+def _get_rule_files() -> List[Path]:
+    """Find IDE rule files from package or development sources.
 
-    Args:
-        target_dir: Directory where rules should be installed
-        overwrite: Whether to overwrite existing files
+    Returns:
+        List of paths to rule files, empty if not found
     """
-    target_dir = Path(target_dir).resolve()
-    cursor_rules_dir = target_dir / ".cursor" / "rules"
-    cursor_rules_dir.mkdir(parents=True, exist_ok=True)
-
-    # Find source rules
     rule_file_names = [
         "function_standards.mdc",
         "documentation_standards.mdc",
@@ -333,7 +314,6 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
 
     # If not found, try package data
     if not rule_files:
-        # Try to find the package data directory
         try:
             import importlib.util
 
@@ -349,7 +329,6 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
         # If still not found, try individual files
         if not rule_files:
             for rule_name in rule_file_names:
-                # Try multiple paths
                 for path_variant in [
                     f".cursor/rules/{rule_name}",
                     f"data/.cursor/rules/{rule_name}",
@@ -360,25 +339,52 @@ def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
                         rule_files.append(rule_path)
                         break
 
-    if not rule_files:
-        print("Warning: Cursor rules directory not found in package")
-        return
-    installed = []
+    return rule_files
 
+
+def _install_ide_rules(target_dir: Path, ide_name: str, overwrite: bool = False) -> None:
+    """Generic helper to install IDE rules.
+
+    Args:
+        target_dir: Directory where rules should be installed
+        ide_name: Name of the IDE (e.g., "cursor", "antigravity")
+        overwrite: Whether to overwrite existing files
+    """
+    target_dir = Path(target_dir).resolve()
+    rules_dir = target_dir / f".{ide_name}" / "rules"
+    rules_dir.mkdir(parents=True, exist_ok=True)
+
+    rule_files = _get_rule_files()
+
+    if not rule_files:
+        print(f"Warning: {ide_name.capitalize()} rules not found in package")
+        return
+
+    installed = []
     for rule_file in rule_files:
-        target_path = cursor_rules_dir / rule_file.name
+        target_path = rules_dir / rule_file.name
 
         if target_path.exists() and not overwrite:
             continue
 
         shutil.copy2(rule_file, target_path)
         installed.append(rule_file.name)
-        print(f"✓ Installed Cursor rule: {rule_file.name}")
+        print(f"✓ Installed {ide_name.capitalize()} rule: {rule_file.name}")
 
     if installed:
-        print(f"\n✓ Installed {len(installed)} Cursor rule file(s) to {cursor_rules_dir}")
+        print(f"\n✓ Installed {len(installed)} {ide_name.capitalize()} rule file(s) to {rules_dir}")
     else:
-        print("No Cursor rules to install")
+        print(f"No {ide_name.capitalize()} rules to install")
+
+
+def install_cursor_rules(target_dir: Path, overwrite: bool = False) -> None:
+    """Install Cursor IDE rules to target directory.
+
+    Args:
+        target_dir: Directory where rules should be installed
+        overwrite: Whether to overwrite existing files
+    """
+    _install_ide_rules(target_dir, "cursor", overwrite)
 
 
 def install_antigravity_rules(target_dir: Path, overwrite: bool = False) -> None:
@@ -388,125 +394,18 @@ def install_antigravity_rules(target_dir: Path, overwrite: bool = False) -> None
         target_dir: Directory where rules should be installed
         overwrite: Whether to overwrite existing files
     """
-    target_dir = Path(target_dir).resolve()
-    antigravity_rules_dir = target_dir / ".antigravity" / "rules"
-    antigravity_rules_dir.mkdir(parents=True, exist_ok=True)
-
-    # Find source rules - reusing Cursor rules for now
-    rule_file_names = [
-        "function_standards.mdc",
-        "documentation_standards.mdc",
-        "error_handling.mdc",
-        "naming_conventions.mdc",
-        "testing_standards.mdc",
-        "code_organization.mdc",
-        "markdown_standards.mdc",
-    ]
-
-    rule_files = []
-
-    # Try development mode first (files in repo)
-    for base_path in [PACKAGE_ROOT, PACKAGE_ROOT.parent]:
-        potential_dir = base_path / ".cursor" / "rules"
-        if potential_dir.exists():
-            rule_files = list(potential_dir.glob("*.mdc"))
-            break
-
-    # If not found, try package data
-    if not rule_files:
-        # Try to find the package data directory
-        try:
-            import importlib.util
-
-            spec = importlib.util.find_spec("coding_standards")
-            if spec and spec.origin:
-                pkg_dir = Path(spec.origin).parent
-                rules_dir = pkg_dir / "data" / ".cursor" / "rules"
-                if rules_dir.exists():
-                    rule_files = list(rules_dir.glob("*.mdc"))
-        except Exception:
-            pass
-
-        # If still not found, try individual files
-        if not rule_files:
-            for rule_name in rule_file_names:
-                # Try multiple paths
-                for path_variant in [
-                    f".cursor/rules/{rule_name}",
-                    f"data/.cursor/rules/{rule_name}",
-                    rule_name,
-                ]:
-                    rule_path = _get_package_data_path(path_variant)
-                    if rule_path and rule_path.exists():
-                        rule_files.append(rule_path)
-                        break
-
-    if not rule_files:
-        print("Warning: Antigravity rules not found in package (checked Cursor rules locations)")
-        return
-    installed = []
-
-    for rule_file in rule_files:
-        target_path = antigravity_rules_dir / rule_file.name
-
-        if target_path.exists() and not overwrite:
-            continue
-
-        shutil.copy2(rule_file, target_path)
-        installed.append(rule_file.name)
-        print(f"✓ Installed Antigravity rule: {rule_file.name}")
-
-    if installed:
-        print(
-            f"\\n✓ Installed {len(installed)} Antigravity rule file(s) to {antigravity_rules_dir}"
-        )
-    else:
-        print("No Antigravity rules to install")
+    _install_ide_rules(target_dir, "antigravity", overwrite)
 
 
 def install_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
-    """Install configuration files to target directory.
+    """Install Python configuration files to target directory.
 
     Args:
         target_dir: Directory where configs should be installed
         overwrite: Whether to overwrite existing files
         interactive: Whether to prompt before overwriting
     """
-    target_dir = Path(target_dir).resolve()
-
-    if not target_dir.exists():
-        print(f"Error: Target directory does not exist: {target_dir}")
-        sys.exit(1)
-
-    config_files = get_config_files()
-    installed = []
-    skipped = []
-
-    for config_file in config_files:
-        target_path = target_dir / config_file.name
-
-        if target_path.exists() and not overwrite:
-            if interactive:
-                response = input(f"{config_file.name} already exists. Overwrite? [y/N]: ")
-                if response.lower() != "y":
-                    skipped.append(config_file.name)
-                    continue
-            else:
-                skipped.append(config_file.name)
-                continue
-
-        shutil.copy2(config_file, target_path)
-        installed.append(config_file.name)
-        print(f"✓ Installed {config_file.name}")
-
-    if installed:
-        print(f"\n✓ Installed {len(installed)} configuration file(s)")
-
-    if skipped:
-        print(f"\n⊘ Skipped {len(skipped)} existing file(s) (use --overwrite to replace)")
-
-    if not installed and not skipped:
-        print("No configuration files to install")
+    _install_config_files(target_dir, get_config_files(), "Python", overwrite, interactive)
 
 
 def install_docs(target_dir: Path, overwrite: bool = False) -> None:

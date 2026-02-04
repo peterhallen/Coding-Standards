@@ -8,11 +8,11 @@
 A comprehensive set of coding standards and best practices designed for both human developers and AI coding assistants. This repository provides guidelines, tooling configuration, and examples to ensure consistency, readability, maintainability, and performance across several codebases. There is currently support for Python, JavaScript/TypeScript, and Go. If you'd like support for a different language, please open an issue.
 
 > [!TIP]
-> **New in v1.1.0**: Now supports **5 AI platforms** - Cursor, Antigravity, Agent OS, GitHub Copilot, and ChatGPT! Install rules for any platform with a single command. See [AI Platform Integration](#ai-platform-integration).
+> **New in v1.1.0**: Now supports **6 AI platforms** - Claude Code, Cursor, Antigravity, Agent OS, GitHub Copilot, and ChatGPT! Install rules for any platform with a single command. See [AI Platform Integration](#ai-platform-integration).
 
 ## What's New in v1.1.0
 
-- **Multi-AI Platform Support** - Install coding standards for Cursor, Antigravity, Agent OS, GitHub Copilot, and ChatGPT
+- **Multi-AI Platform Support** - Install coding standards for Claude Code, Cursor, Antigravity, Agent OS, GitHub Copilot, and ChatGPT
 - **GitHub Copilot Integration** - Native `.github/copilot-instructions.md` support
 - **ChatGPT Custom Instructions** - Ready-to-use instructions file for ChatGPT
 - **Agent OS Standards** - Full standards suite with `index.yml` for pattern matching
@@ -56,6 +56,7 @@ This repository contains:
 
 | Platform | Directory/File | CLI Flag |
 |----------|----------------|----------|
+| **Claude Code** | `CLAUDE.md` | `--claude-code` |
 | **Cursor IDE** | `.cursor/rules/`, `.cursorrules` | `--cursor` |
 | **Antigravity** | `.antigravity/rules/` | `--antigravity` |
 | **Agent OS** | `agent-os/standards/` | `--agent-os` |
@@ -303,6 +304,14 @@ The compliance guide covers:
 
 The standards are fully integrated with multiple AI coding assistants:
 
+### Claude Code
+
+```bash
+coding-standards install --claude-code
+```
+
+Installs `CLAUDE.md` in your project root - Claude Code automatically reads this file and applies the coding standards to all generated code.
+
 ### Cursor IDE
 
 ```bash
@@ -351,7 +360,7 @@ Installs `.chatgpt/instructions.md` - A formatted instructions file you can copy
 
 ```bash
 # Install all AI platforms at once
-coding-standards install --cursor --antigravity --agent-os --copilot --chatgpt
+coding-standards install --claude-code --cursor --antigravity --agent-os --copilot --chatgpt
 ```
 
 ## Contributing

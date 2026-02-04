@@ -510,6 +510,31 @@ def install_copilot_rules(target_dir: Path, overwrite: bool = False) -> None:
     print(f"✓ Installed GitHub Copilot instructions to {target_path}")
 
 
+def install_claude_code_rules(target_dir: Path, overwrite: bool = False) -> None:
+    """Install Claude Code instructions to target directory.
+
+    Args:
+        target_dir: Directory where instructions should be installed
+        overwrite: Whether to overwrite existing files
+    """
+    target_dir = Path(target_dir).resolve()
+
+    source_path = _get_package_data_path("CLAUDE.md")
+
+    if not source_path or not source_path.exists():
+        print("Warning: Claude Code instructions not found in package")
+        return
+
+    target_path = target_dir / "CLAUDE.md"
+
+    if target_path.exists() and not overwrite:
+        print("Claude Code instructions already exist (use --overwrite to replace)")
+        return
+
+    shutil.copy2(source_path, target_path)
+    print(f"✓ Installed Claude Code instructions to {target_path}")
+
+
 def install_configs(target_dir: Path, overwrite: bool = False, interactive: bool = True) -> None:
     """Install Python configuration files to target directory.
 
@@ -893,6 +918,11 @@ def main() -> None:
         help="Install GitHub Copilot instructions (.github/copilot-instructions.md)",
     )
     install_parser.add_argument(
+        "--claude-code",
+        action="store_true",
+        help="Install Claude Code instructions (CLAUDE.md)",
+    )
+    install_parser.add_argument(
         "--lang",
         choices=["python", "javascript", "go", "auto"],
         default="auto",
@@ -1010,6 +1040,9 @@ def main() -> None:
 
         if args.copilot:
             install_copilot_rules(target, overwrite=args.overwrite)
+
+        if args.claude_code:
+            install_claude_code_rules(target, overwrite=args.overwrite)
 
     elif args.command == "check-compliance":
         check_compliance(

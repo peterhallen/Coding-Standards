@@ -88,14 +88,43 @@ pip install -e .
 
 ### Windows Installer (Recommended for Windows)
 
-Download and run the standalone MSI installer - no Python installation required:
+The easiest way to install on Windows is using the standalone MSI installer - no Python installation required.
 
-**[Download coding-standards-1.1.0-win64.msi](https://github.com/peterhallen/Coding-Standards/releases/download/v1.1.0/coding-standards-1.1.0-win64.msi)** (8.7 MB)
+#### Download
 
-After installation, open a new terminal and run:
+**[Download coding-standards-1.1.0-win64.msi](https://github.com/peterhallen/Coding-Standards/releases/latest/download/coding-standards-1.1.0-win64.msi)**
+
+Or visit the [Releases page](https://github.com/peterhallen/Coding-Standards/releases/latest) to download the latest version.
+
+#### Install
+
+1. Run the downloaded `.msi` file
+2. Follow the installation wizard (default location: `C:\Program Files\CodingStandards`)
+3. The installer automatically adds `coding-standards` to your PATH
+
+#### Verify Installation
+
+Open a **new** terminal (Command Prompt or PowerShell) and run:
+
 ```bash
-coding-standards install --cursor --copilot --docs
+coding-standards info
 ```
+
+#### Install Standards in Your Project
+
+Navigate to your project directory and run:
+
+```bash
+# Install with AI platform support
+coding-standards install --claude-code --cursor --copilot
+
+# Or install everything
+coding-standards install --claude-code --cursor --copilot --chatgpt --docs --pre-commit
+```
+
+#### Uninstall
+
+Use Windows "Add or Remove Programs" to uninstall Coding Standards.
 
 ### pip Install (All Platforms)
 

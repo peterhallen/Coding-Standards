@@ -1,0 +1,44 @@
+# Coding Standards Configuration
+# This file configures the coding-standards tool for your project.
+# Copy this file to your project root as .coding-standards.toml
+# or add [tool.coding-standards] section to your pyproject.toml
+
+# Inherit from a preset profile
+# Options: "strict", "standard", "lenient"
+profile = "standard"
+
+# Python settings
+[python]
+line_length = 100
+max_complexity = 10
+max_args = 5
+coverage_threshold = 80
+
+# JavaScript settings
+[javascript]
+enabled = true
+indent_size = 2
+
+# Go settings
+[go]
+enabled = true
+
+# Paths to exclude from checks
+exclude = [
+    "legacy/",
+    "vendor/",
+    "migrations/",
+    "node_modules/",
+    ".venv/",
+    "venv/",
+]
+
+# Default AI platforms to install
+# Set to true for platforms you want installed by default
+[platforms]
+cursor = true
+copilot = true
+claude_code = false
+antigravity = false
+agent_os = false
+chatgpt = false

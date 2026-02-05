@@ -26,6 +26,8 @@ except ImportError:
     # Fallback for development
     PACKAGE_ROOT = Path(__file__).parent.parent.parent
 
+from coding_standards.config import PROFILES, Config, load_config, load_config_from_file
+
 
 def _get_package_data_path(file_path: str) -> Optional[Path]:
     """Get path to a file in the package data.
@@ -634,7 +636,10 @@ def setup_pre_commit(target_dir: Path) -> None:
 
 
 def check_compliance(
-    target_dir: Path, detailed: bool = False, report: Optional[str] = None
+    target_dir: Path,
+    detailed: bool = False,
+    report: Optional[str] = None,
+    config: Optional[Config] = None,
 ) -> None:
     """Check code compliance with coding standards.
 
@@ -642,6 +647,7 @@ def check_compliance(
         target_dir: Directory to check
         detailed: Show detailed information
         report: Path to save HTML report (optional)
+        config: Configuration object with thresholds (optional)
     """
     target_dir = Path(target_dir).resolve()
 
@@ -649,18 +655,32 @@ def check_compliance(
         print(f"Error: Target directory does not exist: {target_dir}")
         sys.exit(1)
 
+    if config is None:
+        config = Config()
+
     print("Checking code compliance...")
+    print(f"Profile: {config.profile}")
+    print(
+        f"Line length: {config.python.line_length}, Max complexity: {config.python.max_complexity}"
+    )
     print("=" * 50)
 
     issues = []
 
+    # Build exclude patterns from config
+    exclude_patterns = config.exclude or []
+    default_excludes = ["__pycache__", ".venv", "venv"]
+
+    def is_excluded(filepath: Path) -> bool:
+        filepath_str = str(filepath)
+        for pattern in exclude_patterns + default_excludes:
+            if pattern in filepath_str:
+                return True
+        return False
+
     # Check for Python files
     python_files = list(target_dir.rglob("*.py"))
-    python_files = [
-        f
-        for f in python_files
-        if "__pycache__" not in str(f) and ".venv" not in str(f) and "venv" not in str(f)
-    ]
+    python_files = [f for f in python_files if not is_excluded(f)]
 
     if not python_files:
         print("No Python files found to check.")
@@ -673,10 +693,16 @@ def check_compliance(
     try:
         import subprocess
 
-        # Check Black formatting
+        # Check Black formatting with config line length
         print("Checking code formatting (Black)...")
         result = subprocess.run(
-            ["black", "--check", "--diff", str(target_dir)],
+            [
+                "black",
+                "--check",
+                "--diff",
+                f"--line-length={config.python.line_length}",
+                str(target_dir),
+            ],
             capture_output=True,
             text=True,
         )
@@ -685,10 +711,16 @@ def check_compliance(
             if detailed:
                 print(result.stdout)
 
-        # Check import sorting
+        # Check import sorting with config line length
         print("Checking import sorting (isort)...")
         result = subprocess.run(
-            ["isort", "--check-only", "--diff", str(target_dir)],
+            [
+                "isort",
+                "--check-only",
+                "--diff",
+                f"--line-length={config.python.line_length}",
+                str(target_dir),
+            ],
             capture_output=True,
             text=True,
         )
@@ -697,10 +729,15 @@ def check_compliance(
             if detailed:
                 print(result.stdout)
 
-        # Check with flake8
+        # Check with flake8 using config thresholds
         print("Checking code quality (flake8)...")
         result = subprocess.run(
-            ["flake8", str(target_dir)],
+            [
+                "flake8",
+                f"--max-line-length={config.python.line_length}",
+                f"--max-complexity={config.python.max_complexity}",
+                str(target_dir),
+            ],
             capture_output=True,
             text=True,
         )
@@ -842,6 +879,85 @@ def check_compliance(
         # In a full implementation, generate HTML report
 
 
+def init_config(target_dir: Path, profile: str = "standard", overwrite: bool = False) -> None:
+    """Generate a sample .coding-standards.toml configuration file.
+
+    Args:
+        target_dir: Directory where config should be created
+        profile: Profile to use in the template (strict, standard, lenient)
+        overwrite: Whether to overwrite existing config file
+    """
+    target_dir = Path(target_dir).resolve()
+    config_path = target_dir / ".coding-standards.toml"
+
+    if config_path.exists() and not overwrite:
+        print(f"Configuration file already exists: {config_path}")
+        print("Use --overwrite to replace it")
+        return
+
+    if profile not in PROFILES:
+        valid_profiles = ", ".join(PROFILES.keys())
+        print(f"Invalid profile '{profile}'. Valid profiles: {valid_profiles}")
+        sys.exit(1)
+
+    template_path = _get_package_data_path(".coding-standards.toml.template")
+
+    if template_path and template_path.exists():
+        content = template_path.read_text(encoding="utf-8")
+        content = content.replace('profile = "standard"', f'profile = "{profile}"')
+
+        if profile in PROFILES:
+            profile_settings = PROFILES[profile]
+            python_settings = profile_settings.get("python", {})
+            content = content.replace(
+                "line_length = 100",
+                f"line_length = {python_settings.get('line_length', 100)}",
+            )
+            content = content.replace(
+                "max_complexity = 10",
+                f"max_complexity = {python_settings.get('max_complexity', 10)}",
+            )
+            content = content.replace(
+                "max_args = 5",
+                f"max_args = {python_settings.get('max_args', 5)}",
+            )
+            content = content.replace(
+                "coverage_threshold = 80",
+                f"coverage_threshold = {python_settings.get('coverage_threshold', 80)}",
+            )
+
+        config_path.write_text(content, encoding="utf-8")
+    else:
+        content = f"""# Coding Standards Configuration
+profile = "{profile}"
+
+[python]
+line_length = {PROFILES[profile]["python"]["line_length"]}
+max_complexity = {PROFILES[profile]["python"]["max_complexity"]}
+max_args = {PROFILES[profile]["python"]["max_args"]}
+coverage_threshold = {PROFILES[profile]["python"]["coverage_threshold"]}
+
+[javascript]
+enabled = true
+indent_size = 2
+
+[go]
+enabled = true
+
+exclude = []
+
+[platforms]
+cursor = true
+copilot = true
+claude_code = false
+"""
+        config_path.write_text(content, encoding="utf-8")
+
+    print(f"✓ Created configuration file: {config_path}")
+    print(f"  Profile: {profile}")
+    print("\nYou can now customize this file for your project.")
+
+
 def show_info() -> None:
     """Show information about the coding standards package."""
     print("Coding Standards")
@@ -928,6 +1044,31 @@ def main() -> None:
         default="auto",
         help="Language to install standards for (default: auto-detect)",
     )
+    install_parser.add_argument(
+        "--config",
+        type=str,
+        help="Path to custom configuration file",
+    )
+
+    # Init command
+    init_parser = subparsers.add_parser("init", help="Generate sample configuration file")
+    init_parser.add_argument(
+        "target",
+        nargs="?",
+        default=".",
+        help="Target directory (default: current directory)",
+    )
+    init_parser.add_argument(
+        "--profile",
+        choices=["strict", "standard", "lenient"],
+        default="standard",
+        help="Profile to use (default: standard)",
+    )
+    init_parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Overwrite existing configuration file",
+    )
 
     # Check compliance command
     check_parser = subparsers.add_parser(
@@ -948,6 +1089,11 @@ def main() -> None:
         "--report",
         type=str,
         help="Path to save HTML compliance report",
+    )
+    check_parser.add_argument(
+        "--config",
+        type=str,
+        help="Path to custom configuration file",
     )
 
     # Fix compliance command
@@ -975,6 +1121,28 @@ def main() -> None:
     if args.command == "install":
         target = Path(args.target).resolve()
 
+        # Load configuration
+        try:
+            if args.config:
+                config = load_config_from_file(Path(args.config))
+            else:
+                config = load_config(target)
+        except (ValueError, FileNotFoundError) as e:
+            print(f"Error loading configuration: {e}")
+            sys.exit(1)
+
+        # Check if any platform flags were explicitly provided
+        platform_flags_provided = any(
+            [
+                args.cursor,
+                args.antigravity,
+                args.agent_os,
+                args.chatgpt,
+                args.copilot,
+                args.claude_code,
+            ]
+        )
+
         # Determine language
         install_python = False
         install_js = False
@@ -989,9 +1157,9 @@ def main() -> None:
         else:  # auto
             # Simple auto-detection
             if (target / "package.json").exists():
-                install_js = True
+                install_js = config.javascript.enabled
             if (target / "go.mod").exists() or list(target.glob("*.go")):
-                install_go = True
+                install_go = config.go.enabled
             if (target / "pyproject.toml").exists() or list(target.glob("*.py")):
                 install_python = True
 
@@ -1026,29 +1194,62 @@ def main() -> None:
         if args.pre_commit:
             setup_pre_commit(target)
 
-        if args.cursor:
+        # Use explicit flags if provided, otherwise use config defaults
+        should_install_cursor = args.cursor or (
+            not platform_flags_provided and config.platforms.cursor
+        )
+        should_install_antigravity = args.antigravity or (
+            not platform_flags_provided and config.platforms.antigravity
+        )
+        should_install_agent_os = args.agent_os or (
+            not platform_flags_provided and config.platforms.agent_os
+        )
+        should_install_chatgpt = args.chatgpt or (
+            not platform_flags_provided and config.platforms.chatgpt
+        )
+        should_install_copilot = args.copilot or (
+            not platform_flags_provided and config.platforms.copilot
+        )
+        should_install_claude_code = args.claude_code or (
+            not platform_flags_provided and config.platforms.claude_code
+        )
+
+        if should_install_cursor:
             install_cursor_rules(target, overwrite=args.overwrite)
 
-        if args.antigravity:
+        if should_install_antigravity:
             install_antigravity_rules(target, overwrite=args.overwrite)
 
-        if args.agent_os:
+        if should_install_agent_os:
             install_agent_os_rules(target, overwrite=args.overwrite)
 
-        if args.chatgpt:
+        if should_install_chatgpt:
             install_chatgpt_rules(target, overwrite=args.overwrite)
 
-        if args.copilot:
+        if should_install_copilot:
             install_copilot_rules(target, overwrite=args.overwrite)
 
-        if args.claude_code:
+        if should_install_claude_code:
             install_claude_code_rules(target, overwrite=args.overwrite)
 
     elif args.command == "check-compliance":
+        target = Path(args.target).resolve()
+
+        # Load configuration
+        try:
+            if hasattr(args, "config") and args.config:
+                config = load_config_from_file(Path(args.config))
+            else:
+                config = load_config(target)
+        except (ValueError, FileNotFoundError) as e:
+            print(f"Error loading configuration: {e}")
+            sys.exit(1)
+
         check_compliance(
-            Path(args.target),
+            target,
             detailed=args.detailed,
             report=args.report,
+            config=config,
         )
 
     elif args.command == "fix-compliance":
@@ -1086,6 +1287,13 @@ def main() -> None:
             print("Error: Required tools not found.")
             print("Install with: pip install black isort")
             sys.exit(1)
+
+    elif args.command == "init":
+        init_config(
+            Path(args.target),
+            profile=args.profile,
+            overwrite=args.overwrite,
+        )
 
     elif args.command == "info":
         show_info()

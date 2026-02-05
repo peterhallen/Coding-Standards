@@ -26,6 +26,7 @@ A comprehensive set of coding standards and best practices designed for both hum
 - [Supported AI Platforms](#supported-ai-platforms)
 - [Migration from Old Version](#migration-from-old-version)
 - [Quick Start](#quick-start)
+- [Configuration File](#configuration-file)
 - [Documentation](#documentation)
 - [Tooling Configuration](#tooling-configuration)
 - [Standards Summary](#standards-summary)
@@ -177,6 +178,84 @@ pytest --cov     # Run tests
 ```
 
 See [INSTALLATION.md](INSTALLATION.md) for detailed OS-specific instructions.
+
+## Configuration File
+
+Customize coding standards for your team using a `.coding-standards.toml` configuration file. You can also use `[tool.coding-standards]` in your `pyproject.toml`.
+
+### Generate Configuration
+
+```bash
+# Generate default configuration file
+coding-standards init
+
+# Generate with a specific profile
+coding-standards init --profile strict
+```
+
+### Configuration Format
+
+```toml
+# .coding-standards.toml (or [tool.coding-standards] in pyproject.toml)
+
+# Inherit from a preset profile: "strict", "standard", or "lenient"
+profile = "standard"
+
+# Python settings
+[python]
+line_length = 100
+max_complexity = 10
+max_args = 5
+coverage_threshold = 80
+
+# JavaScript settings
+[javascript]
+enabled = true
+indent_size = 2
+
+# Go settings
+[go]
+enabled = true
+
+# Paths to exclude from checks
+exclude = [
+    "legacy/",
+    "vendor/",
+    "migrations/",
+]
+
+# Default AI platforms to install
+[platforms]
+cursor = true
+copilot = true
+claude_code = false
+antigravity = false
+agent_os = false
+chatgpt = false
+```
+
+### Preset Profiles
+
+| Setting | Strict | Standard | Lenient |
+|---------|--------|----------|---------|
+| line_length | 88 | 100 | 120 |
+| max_complexity | 5 | 10 | 15 |
+| max_args | 4 | 5 | 7 |
+| coverage_threshold | 90% | 80% | 60% |
+
+### Using Configuration
+
+Commands automatically detect and use your configuration:
+
+```bash
+# Uses .coding-standards.toml or pyproject.toml automatically
+coding-standards install
+coding-standards check-compliance
+
+# Specify a custom config file
+coding-standards install --config custom-config.toml
+coding-standards check-compliance --config custom-config.toml
+```
 
 ## Documentation
 

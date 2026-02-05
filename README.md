@@ -8,7 +8,14 @@
 A comprehensive set of coding standards and best practices designed for both human developers and AI coding assistants. This repository provides guidelines, tooling configuration, and examples to ensure consistency, readability, maintainability, and performance across several codebases. There is currently support for Python, JavaScript/TypeScript, and Go. If you'd like support for a different language, please open an issue.
 
 > [!TIP]
-> **New in v1.1.0**: Now supports **6 AI platforms** - Claude Code, Cursor, Antigravity, Agent OS, GitHub Copilot, and ChatGPT! Install rules for any platform with a single command. See [AI Platform Integration](#ai-platform-integration).
+> **New in v1.2.0**: Configuration file support! Customize standards with `.coding-standards.toml` or `pyproject.toml`. Choose from preset profiles (strict, standard, lenient). See [Configuration File](#configuration-file).
+
+## What's New in v1.2.0
+
+- **Configuration File Support** - Customize tool settings via `.coding-standards.toml` or `[tool.coding-standards]` in pyproject.toml
+- **Preset Profiles** - Choose from strict, standard, or lenient profiles with different thresholds
+- **`coding-standards init`** - New command to generate sample configuration files
+- **Platform Defaults** - Configure which AI platforms to install by default
 
 ## What's New in v1.1.0
 
@@ -20,7 +27,7 @@ A comprehensive set of coding standards and best practices designed for both hum
 
 ## Table of Contents
 
-- [What's New in v1.1.0](#whats-new-in-v110)
+- [What's New in v1.2.0](#whats-new-in-v120)
 - [Overview](#overview)
 - [Supported Languages](#supported-languages)
 - [Supported AI Platforms](#supported-ai-platforms)
@@ -93,7 +100,7 @@ The easiest way to install on Windows is using the standalone MSI installer - no
 
 #### Download
 
-**[Download coding-standards-1.1.0-win64.msi](https://github.com/peterhallen/Coding-Standards/releases/latest/download/coding-standards-1.1.0-win64.msi)**
+**[Download coding-standards-1.2.0-win64.msi](https://github.com/peterhallen/Coding-Standards/releases/latest/download/coding-standards-1.2.0-win64.msi)**
 
 Or visit the [Releases page](https://github.com/peterhallen/Coding-Standards/releases/latest) to download the latest version.
 
@@ -508,4 +515,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Last Updated**: 2026-02-03
-**Version**: 1.1.0
+**Version**: 1.2.0
